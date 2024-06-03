@@ -135,7 +135,7 @@ func CrearEjercicio() {
         Descripcion: descripcion,
         Tiempo:      tiempo, // Tiempo estimado en minutos
         Calorias:    calorias,
-        Tipos:       tipos,
+        Tipo:       tipos,
         Puntos:      puntos,
         Dificultad:  dificultad,
 	}
