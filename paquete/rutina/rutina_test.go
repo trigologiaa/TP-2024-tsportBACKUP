@@ -29,13 +29,13 @@ import (
 //      Se retornan 'gestorRutinas' y 'gestorEjercicios'
 func setup() (*GestorRutinas, *ejercicio.GestorEjercicios) {
     gestorEjercicios := ejercicio.NuevoGestorEjercicios()
-    gestorEjercicios.AgregarEjercicio(&ejercicio.Ejercicio{
+    gestorEjercicios.AgregarEjercicio(&ejercicio.Ejercicio {
         Nombre: "Sentadillas", 
         Tiempo: 60, 
         Calorias: 100, 
         Dificultad: "Media",
     })
-    gestorEjercicios.AgregarEjercicio(&ejercicio.Ejercicio{
+    gestorEjercicios.AgregarEjercicio(&ejercicio.Ejercicio {
         Nombre: "Flexiones", 
         Tiempo: 30, 
         Calorias: 50, 
