@@ -1,5 +1,7 @@
 package almacenamiento
 
+//YA NO HARIA FALTA ESTE ARCHIVO TODO ESTARIA EN LOS PAQUETES RUTINA Y EJERCICIO
+/*
 import (
     "io"
     "os"
@@ -141,3 +143,4 @@ func CargarRutinas(nombreDeArchivo string) ([]*rutina.Rutina, error) {
     }
     return rutinas, nil
 }
+*/

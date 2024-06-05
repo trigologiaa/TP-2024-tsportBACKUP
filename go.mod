@@ -7,7 +7,7 @@ require github.com/gocarina/gocsv v0.0.0-20231116093920-b87c2d0e983a
 require (
 	github.com/eiannone/keyboard v0.0.0-20220611211555-0d226195f203
 	github.com/stretchr/testify v1.9.0
-	github.com/untref-ayp2/data-structures v0.10.1
+	github.com/untref-ayp2/data-structures v0.11.4
 )
 
 require (
