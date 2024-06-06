@@ -1,5 +1,7 @@
 package ejercicio
 
+//YA NO HARIA FALTA ESTE ARCHIVO, TODO ESTÁ EN EL PAQUETE INTERACCION
+/*
 import (
 	"log"
 	"os"
@@ -52,3 +54,4 @@ func eliminarEjercicio() {
 func consultarEjercicio() {
 	fmt.Printf("Se consulta ejercicio")
 }
+*/
