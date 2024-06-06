@@ -9,7 +9,6 @@ import (
 	"os"
 	"strconv"
 	"strings"
-
 	"github.com/eiannone/keyboard"
 )
 

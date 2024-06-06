@@ -1,13 +1,12 @@
 package almacenamiento
 
-//YA NO HARIA FALTA ESTE ARCHIVO TODO ESTARIA EN LOS PAQUETES RUTINA Y EJERCICIO
-/*
 import (
-    "io"
-    "os"
-    "github.com/gocarina/gocsv"
-    "TP-2024-TSPORT/paquete/ejercicio"
-    "TP-2024-TSPORT/paquete/rutina"
+	"TP-2024-TSPORT/paquete/ejercicio"
+	"TP-2024-TSPORT/paquete/rutina"
+	"io"
+	"os"
+	"path/filepath"
+	"github.com/gocarina/gocsv"
 )
 
 // init genera una inicialización con configuraciones específicas para la escritura de CSV.
@@ -44,7 +43,9 @@ func init() {
 //      Se difiere el método 'Close' hasta que el método 'GuardarEjercicios' termine
 //      Se retorna el método 'MarshalFile' que serializa los datos a formato CSV y los escribe en el archivo especificado, recibiendo como argumentos '&ejercicios' que es la dirección de memoria y lo deja como interface y 'archivo' como puntero a 'os.File'
 func GuardarEjercicios(ejercicios []*ejercicio.Ejercicio, nombreDeArchivo string) error {
-    archivo, err := os.OpenFile(nombreDeArchivo, os.O_RDWR | os.O_CREATE | os.O_TRUNC, 0644)
+    // Especifica la ruta completa del archivo
+    rutaCompleta := filepath.Join("D:/UNTREF/AlgoritmosyProgramaciónII/TP-2024-tsport/informacion", nombreDeArchivo)
+    archivo, err := os.OpenFile(rutaCompleta, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
     if err != nil {
         return err
     }
@@ -71,12 +72,12 @@ func GuardarEjercicios(ejercicios []*ejercicio.Ejercicio, nombreDeArchivo string
 //      }
 //      Se retorna 'ejercicios' y nil
 func CargarEjercicios(nombreDeArchivo string) ([]*ejercicio.Ejercicio, error) {
-    ejercicios := []*ejercicio.Ejercicio {}
-    archivo, err := os.Open(nombreDeArchivo)
+    archivo, err := os.Open(filepath.Join("D:/UNTREF/AlgoritmosyProgramaciónII/TP-2024-tsport/informacion", nombreDeArchivo))
     if err != nil {
         return nil, err
     }
     defer archivo.Close()
+    ejercicios := []*ejercicio.Ejercicio{}
     if err := gocsv.UnmarshalFile(archivo, &ejercicios); err != nil {
         return nil, err
     }
@@ -102,7 +103,9 @@ func CargarEjercicios(nombreDeArchivo string) ([]*ejercicio.Ejercicio, error) {
 //      }
 //      Se retorna el método 'MarshalFile' que serializa los datos a formato CSV y los escribe en el archivo especificado, recibiendo como argumentos '&rutinas' que es la dirección de memoria y lo deja como interface y 'archivo' como puntero a 'os.File'
 func GuardarRutinas(rutinas []*rutina.Rutina, gestor *ejercicio.GestorEjercicios, nombreDeArchivo string) error {
-    archivo, err := os.OpenFile(nombreDeArchivo, os.O_RDWR | os.O_CREATE | os.O_TRUNC, 0644)
+    // Especifica la ruta completa del archivo
+    rutaCompleta := filepath.Join("D:/UNTREF/AlgoritmosyProgramaciónII/TP-2024-tsport/informacion", nombreDeArchivo)
+    archivo, err := os.OpenFile(rutaCompleta, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
     if err != nil {
         return err
     }
@@ -132,15 +135,14 @@ func GuardarRutinas(rutinas []*rutina.Rutina, gestor *ejercicio.GestorEjercicios
 //      }
 //      Se retorna 'rutinas' y nil
 func CargarRutinas(nombreDeArchivo string) ([]*rutina.Rutina, error) {
-    rutinas := []*rutina.Rutina{}
-    archivo, err := os.Open(nombreDeArchivo)
+    archivo, err := os.Open(filepath.Join("D:/UNTREF/AlgoritmosyProgramaciónII/TP-2024-tsport/informacion", nombreDeArchivo))
     if err != nil {
         return nil, err
     }
     defer archivo.Close()
+    rutinas := []*rutina.Rutina{}
     if err := gocsv.UnmarshalFile(archivo, &rutinas); err != nil {
         return nil, err
     }
     return rutinas, nil
 }
-*/

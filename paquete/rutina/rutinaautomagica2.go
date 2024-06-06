@@ -1,63 +1,141 @@
 package rutina
-
+//no llega a agregar rutina
 import (
 	"TP-2024-TSPORT/paquete/ejercicio"
-	"errors"
-
-	"github.com/untref-ayp2/data-structures/heap"
+    "errors"
 )
 
-func GenerarRutinaPorCalorias(nombre string, caloriasTotales int) error {
-
-	// Busco todos los ejercicios almacenados, si no hay ejercicios retorno un error
-	ejerciciosAlmacenados, err := ejercicio.CargarEjercicios("Donde está la rutina?")
-	if err != nil {
-		return err
-	}
-
-	// Ordeno los ejercicios de mayor a menor cantidad de calorias
-	// para respetar el principio de minima duración de la rutina.
-	ejerciciosOrdenados := heap.NewGenericHeap[*ejercicio.Ejercicio](ejerciciosDeMayorAMenorCalorias)
-	for _, valor := range ejerciciosAlmacenados {
-		ejerciciosOrdenados.Insert(valor)
-	}
-
-	// Itero por los ejercicios ordenados,
-	// si al sumar las calorias del ejercicio actual con las
-	// calorias de los ejercicios anteriores no supero las calorias totales,
-	// agrego el ejercicio actual a la rutina
-	var excedeCalorias bool
-	var caloriasNuevaRutina int
-	conjuntoEjercicios := ejercicio.NuevoGestorEjercicios()
-	for i := 0; i < ejerciciosOrdenados.Size() && !excedeCalorias; i++ {
-		ejercicio, _ := ejerciciosOrdenados.Remove()
-		respetaCalorias := ejercicio.Calorias+caloriasNuevaRutina < caloriasTotales
-		if respetaCalorias {
-			conjuntoEjercicios.AgregarEjercicio(ejercicio)
-			caloriasNuevaRutina += ejercicio.Calorias
-		} else {
-			excedeCalorias = true
-		}
-	}
-
-	if len(conjuntoEjercicios.ObtenerTodosLosEjercicios()) < 1 {
-		return errors.New("no hay suficiente ejercicios en la rutina")
-	}
-
-	// Falta meter los ejercicios a una rutina en si y para eso hay que hacer el func NuevaRutina()
-	// Después falta el agregar la rutina al gestor de rutinas
-	// Y si devuelvo el puntero a la rutina y que interacción se encargue de agregarla al gestor de rutinas?
-	return nil
+// GenerarRutinaAutomagica2 genera automáticamente una rutina nueva que cumple con los parámetros especificados.
+//
+// Parámetros:
+//   - nombre: Nombre de la rutina.
+//   - caloriasTotales: Calorías totales a quemar.
+//   - gestor: GestorEjercicios que proporciona acceso a los ejercicios disponibles.
+//
+// Retorna:
+//   - Un puntero a Rutina que representa la rutina generada.
+//   - Un error en caso de que no se puedan encontrar ejercicios que cumplan con los requisitos.
+func (g *GestorRutinas) GenerarRutinaAutomagica2(nombre string, caloriasTotales int) (*Rutina, error) {
+    ejercicios := g.gestorEjercicios.ObtenerTodosLosEjercicios()
+    ejerciciosFiltrados := filtrarEjerciciosPorCalorias(ejercicios, caloriasTotales)
+    if len(ejerciciosFiltrados) == 0 {
+        return nil, errors.New("no hay ejercicios disponibles que puedan quemar las calorías totales especificadas")
+    }
+    ejerciciosSeleccionados := seleccionarEjercicios(ejerciciosFiltrados, caloriasTotales)
+    rutina := &Rutina{
+        Nombre:     nombre,
+        Ejercicios: unirNombresEjercicios(ejerciciosSeleccionados),
+        Tiempo:     calcularDuracionTotal(ejerciciosSeleccionados),
+        Calorias:   caloriasTotales,
+        Dificultad: calcularDificultad(ejerciciosSeleccionados),
+        Tipos:      tiposDeEjercicios(ejerciciosSeleccionados),
+        PuntosPorTipo: calcularPuntosTotales(ejerciciosSeleccionados),
+    }
+    return rutina, nil
 }
 
-// Esta función compara las calorias de dos ejercicios y devuelve cual contiene más
-// es para que el heap generico que ordena los ejercicios funcione
-// COMPLETAR esta documentación
-func ejerciciosDeMayorAMenorCalorias(a *ejercicio.Ejercicio, b *ejercicio.Ejercicio) int {
-	if a.Calorias < b.Calorias {
-		return -1
-	} else if b.Calorias < a.Calorias {
-		return 1
-	}
-	return 0
+// Filtra los ejercicios que puedan quemar las calorías totales especificadas.
+func filtrarEjerciciosPorCalorias(ejercicios []*ejercicio.Ejercicio, caloriasTotales int) []*ejercicio.Ejercicio {
+    var ejerciciosFiltrados []*ejercicio.Ejercicio
+    for _, ejercicio := range ejercicios {
+        if ejercicio.Calorias <= caloriasTotales {
+            ejerciciosFiltrados = append(ejerciciosFiltrados, ejercicio)
+        }
+    }
+    return ejerciciosFiltrados
+}
+
+// Selecciona los ejercicios que minimicen la duración total de la rutina.
+func seleccionarEjercicios(ejercicios []*ejercicio.Ejercicio, caloriasTotales int) []*ejercicio.Ejercicio {
+    ordenarEjerciciosPorTiempo(ejercicios)
+    var ejerciciosSeleccionados []*ejercicio.Ejercicio
+    caloriasRestantes := caloriasTotales
+    for _, ejercicio := range ejercicios {
+        if ejercicio.Calorias <= caloriasRestantes {
+            ejerciciosSeleccionados = append(ejerciciosSeleccionados, ejercicio)
+            caloriasRestantes -= ejercicio.Calorias
+        }
+    }
+    return ejerciciosSeleccionados
+}
+
+// Ordena los ejercicios por tiempo ascendente.
+func ordenarEjerciciosPorTiempo(ejercicios []*ejercicio.Ejercicio) {
+    for i := 0; i < len(ejercicios)-1; i++ {
+        for j := 0; j < len(ejercicios)-i-1; j++ {
+            if ejercicios[j].Tiempo > ejercicios[j+1].Tiempo {
+                ejercicios[j], ejercicios[j+1] = ejercicios[j+1], ejercicios[j]
+            }
+        }
+    }
+}
+
+// Calcula la duración total de los ejercicios.
+func calcularDuracionTotal(ejercicios []*ejercicio.Ejercicio) int {
+    var duracionTotal int
+    for _, ejercicio := range ejercicios {
+        duracionTotal += ejercicio.Tiempo
+    }
+    return duracionTotal
+}
+
+// Calcula la dificultad de la rutina.
+func calcularDificultad(ejercicios []*ejercicio.Ejercicio) string {
+    // Se cuentan las frecuencias de los niveles de dificultad
+    dificultades := make(map[string]int)
+    for _, ejercicio := range ejercicios {
+        dificultades[ejercicio.Dificultad]++
+    }
+    maxFrecuencia := 0
+    dificultadMasFrecuente := ""
+    for dificultad, frecuencia := range dificultades {
+        if frecuencia > maxFrecuencia {
+            maxFrecuencia = frecuencia
+            dificultadMasFrecuente = dificultad
+        }
+    }
+    return dificultadMasFrecuente
+}
+
+// Retorna una cadena que contiene los nombres de los ejercicios separados por coma.
+func unirNombresEjercicios(ejercicios []*ejercicio.Ejercicio) string {
+    var nombres []string
+    for _, ejercicio := range ejercicios {
+        nombres = append(nombres, ejercicio.Nombre)
+    }
+    return unirStrings(nombres, ", ")
+}
+
+// Retorna una cadena que contiene los tipos de ejercicios separados por coma.
+func tiposDeEjercicios(ejercicios []*ejercicio.Ejercicio) string {
+    var tipos []string
+    tipoMap := make(map[string]bool)
+    for _, ejercicio := range ejercicios {
+        if _, exists := tipoMap[ejercicio.Tipo]; !exists {
+            tipos = append(tipos, ejercicio.Tipo)
+            tipoMap[ejercicio.Tipo] = true
+        }
+    }
+    return unirStrings(tipos, ", ")
+}
+
+// Calcula los puntos totales de la rutina.
+func calcularPuntosTotales(ejercicios []*ejercicio.Ejercicio) int {
+    var puntosTotales int
+    for _, ejercicio := range ejercicios {
+        puntosTotales += ejercicio.Puntos
+    }
+    return puntosTotales
+}
+
+// Une los elementos de un slice en una cadena usando un separador.
+func unirStrings(strings []string, separador string) string {
+    var resultado string
+    for i, s := range strings {
+        if i > 0 {
+            resultado += separador
+        }
+        resultado += s
+    }
+    return resultado
 }

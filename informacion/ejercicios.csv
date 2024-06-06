@@ -1,3 +1,8 @@
-Nombre;Descripcion;Tiempo;Calorias;Tipo;PuntosPorTipo;Dificultad
-Burpees;Ejercicio de cuerpo completo;30;10;"""Cardio""";2;Intermedio
-Plancha;Ejercicio de fuerza para abdomen;60;20;Fuerza;1;Principiante
+Nombre,Descripcion,Tiempo,Calorias,Tipo,Puntos,Dificultad
+Caminar,Ejercicio aerobico,60,37,Cardio,0,Principiante
+Correr,Ejercicio aerobico,60,100,Cardio,1,Principiante
+Escaleras,Subir y bajar escaleras,60,205,Prueba,2,Intermedio
+Bicicleta,Andar en bicicleta,60,150,Cardio,1,Principiante
+Natación,Andar en agua,60,222,Cardio,2,Principiante
+Prueba,Prueba,60,45,Prueba,55,Prueba
+prueba,vdsklnc wvrhtr   gr ege,60,12,cdsvr,213,vfeavre

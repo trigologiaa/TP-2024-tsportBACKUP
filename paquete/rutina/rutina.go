@@ -1,12 +1,8 @@
-// Package rutina gestiona rutinas de ejercicios con funcionalidades para crear, modificar, eliminar y consultar rutinas, integrando cálculos basados en un gestor de ejercicios.
 package rutina
 
 import (
 	"TP-2024-TSPORT/paquete/ejercicio"
 	"errors"
-	"os"
-
-	"github.com/gocarina/gocsv"
 	list "github.com/untref-ayp2/data-structures/list"
 )
 
@@ -24,7 +20,7 @@ import (
 type Rutina struct {
 	Nombre        string `csv:"Nombre"`        //Nombre de la rutina
 	Ejercicios    string `csv:"Ejercicios"`    //Ejercicios que contiene la rutina
-	Tiempo        int    `csv:"Tiempo"`        //Tiempo total en segundo
+	Tiempo        int    `csv:"Tiempo"`        //Tiempo total en segundos
 	Calorias      int    `csv:"Calorias"`      //Calorías quemadas en total
 	Dificultad    string `csv:"Dificultad"`    //Dificultad de la rutina
 	Tipos         string `csv:"Tipos"`         //Tipo de rutina
@@ -152,6 +148,26 @@ func (g *GestorRutinas) ModificarRutina(nombre string, nuevaRutina *Rutina) erro
 	return errors.New("rutina no encontrada")
 }
 
+// ObtenerTodasLasRutinas devuelve una lista de todas las rutinas almacenadas.
+//
+// Retorna:
+//   - Un slice de punteros a Rutina que contiene todas las rutinas almacenadas.
+//
+// Funcionamiento:
+//
+//	Se declara la variable 'resultado' de tipo slice de punteros a Rutina (vacío)
+//	Se recorre la lista de rutinas {
+//	    Se agrega la rutina del nodo actual al slice 'resultado'
+//	}
+//	Se retorna 'resultado'
+func (g *GestorRutinas) ObtenerTodasLasRutinas() []*Rutina {
+	resultado := []*Rutina{}
+	for node := g.rutinas.Head(); node != nil; node = node.Next() {
+		resultado = append(resultado, node.Data())
+	}
+	return resultado
+}
+
 // ConsultarRutina devuelve los datos de la rutina buscando por su nombre.
 //
 // Parámetros:
@@ -178,7 +194,7 @@ func (g *GestorRutinas) ConsultarRutina(nombre string) (*Rutina, error) {
 	return nil, errors.New("rutina no encontrada")
 }
 
-// ListarRutinas devuelve una lista de rutinas que coinciden con una dificultad específica
+// ListarRutinas devuelve una lista de rutinas que coinciden con una dificultad específica.
 //
 // Parámetros:
 //   - 'dificultad' será la dificultad de la rutina a buscar.
@@ -212,7 +228,7 @@ func (g *GestorRutinas) ListarRutinas(dificultad string) []*Rutina {
 //
 // Funcionamiento:
 //
-//	Se crea la variable 'ejercicios' de tipo slice de punteros de Ejercicio, que contiene el resultado del método 'ObtenerTodosLosEjercicios' de gestor
+//	Se declara la variable 'ejercicios' de tipo slice de punteros de Ejercicio, que contiene el resultado del método 'ObtenerTodosLosEjercicios' de gestor
 //	Se declaran las variables 'totalTiempo', 'totalCalorias' y 'totalPuntos' de tipo int para acumular tiempo, calorías y puntos totales de los ejercicios
 //	Se declara la variable 'nombresEjercicios' de tipo slice de string (vacío)
 //	Se declara la variable 'tiposSet' de tipo map para almacenar los tipos únicos de ejercicios
@@ -234,27 +250,27 @@ func (g *GestorRutinas) ListarRutinas(dificultad string) []*Rutina {
 //	    Se asigna el nivel de dificultad más frecuente del map 'dificultades'
 //	}
 func (r *Rutina) CalcularPropiedades(gestor *ejercicio.GestorEjercicios) {
-	ejercicios := gestor.ObtenerTodosLosEjercicios()
-	var totalTiempo, totalCalorias, totalPuntos int
-	nombresEjercicios := make([]string, 0)
-	tiposSet := make(map[string]bool)
-	dificultades := make(map[string]int)
-	for _, ejercicio := range ejercicios {
-		totalTiempo += ejercicio.Tiempo
-		totalCalorias += ejercicio.Calorias
-		totalPuntos += ejercicio.Puntos
-		nombresEjercicios = append(nombresEjercicios, ejercicio.Nombre)
-		tiposSet[ejercicio.Tipo] = true
-		dificultades[ejercicio.Dificultad]++
-	}
-	r.Tiempo = totalTiempo
-	r.Calorias = totalCalorias
-	r.Ejercicios = unirKeys(nombresEjercicios, ", ")
-	r.Tipos = unirKeys(mapKeysAStringSlice(tiposSet), ", ")
-	r.PuntosPorTipo = totalPuntos
-	if r.Dificultad == "" {
-		r.Dificultad = keyMaxima(dificultades)
-	}
+    ejercicios := gestor.ObtenerTodosLosEjercicios()
+    var totalTiempo, totalCalorias, totalPuntos int
+    nombresEjercicios := make([]string, 0)
+    tiposSet := make(map[string]bool)
+    dificultades := make(map[string]int)
+    for _, ejercicio := range ejercicios {
+        totalTiempo += ejercicio.Tiempo
+        totalCalorias += ejercicio.Calorias
+        totalPuntos += ejercicio.Puntos
+        nombresEjercicios = append(nombresEjercicios, ejercicio.Nombre)
+        tiposSet[ejercicio.Tipo] = true
+        dificultades[ejercicio.Dificultad]++
+    }
+    r.Tiempo = totalTiempo
+    r.Calorias = totalCalorias
+    r.Ejercicios = unirKeys(nombresEjercicios, ", ")
+    r.Tipos = unirKeys(mapKeysAStringSlice(tiposSet), ", ")
+    r.PuntosPorTipo = totalPuntos
+    if r.Dificultad == "" {
+        r.Dificultad = keyMaxima(dificultades)
+    }
 }
 
 // unirKeys une una lista de cadenas usando un separador dado.
@@ -262,10 +278,8 @@ func (r *Rutina) CalcularPropiedades(gestor *ejercicio.GestorEjercicios) {
 // Parámetros:
 //   - 'elementos' será un slice de string que se unirán.
 //   - 'separador' como un string que se usará como separador entre los elementos.
-//
 // Retorna:
 //   - Un string que contiene todos los elementos del slice unidos por el separador especificado.
-//
 // Funcionamiento:
 //
 //	Se declara la variable 'resultado' de tipo string vacío
@@ -339,71 +353,4 @@ func keyMaxima(mapa map[string]int) string {
 		}
 	}
 	return claveMaxima
-}
-
-// GuardarRutinas guarda una lista de rutinas en un archivo CSV.
-//
-// Parámetros:
-//   - 'rutinas' será un slice de punteros a la estructura 'Rutina'.
-//   - 'gestor' será un puntero a 'GestorEjercicios', usado para calcular las propiedades de las rutinas.
-//   - 'nombreDeArchivo' será un String con la ruta del archivo donde se guardarán las rutinas.
-//
-// Retorna:
-//   - Un error en caso de que ocurra un problema al abrir o escribir en el archivo.
-//
-// Funcionamiento:
-//
-//	Se declaran las variables 'archivo' y 'error' que funcionarán como receptores del retorno del método 'OpenFile' de 'os', que recibe los parámetros 'nombreDeArchivo' como string, 'os.O_RDWR (Permite la lectura y escritura en el archivo) | os.O_CREATE (Crea el archivo si no existe) | os.O_TRUNC (Vacía el archivo si ya existe)' como int y '0644' como 'fs.FileMode'
-//	Si hubo un error al abrir el archivo {
-//	    Se retorna un error
-//	}
-//	Se difiere al método 'Close' hasta que el método 'GuardarRutinas' termine
-//	Se recorre cada ´rutina´ de 'rutinas' {
-//	    Se llama al método 'CalcularPropiedades' pasándole como argumento 'gestor'
-//	}
-//	Se retorna el método 'MarshalFile' que serializa los datos a formato CSV y los escribe en el archivo especificado, recibiendo como argumentos '&rutinas' que es la dirección de memoria y lo deja como interface y 'archivo' como puntero a 'os.File'
-func GuardarRutinas(rutinas []*Rutina, gestor *ejercicio.GestorEjercicios, nombreDeArchivo string) error {
-	archivo, err := os.OpenFile(nombreDeArchivo, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
-	if err != nil {
-		return err
-	}
-	defer archivo.Close()
-	for _, rutina := range rutinas {
-		rutina.CalcularPropiedades(gestor)
-	}
-	return gocsv.MarshalFile(&rutinas, archivo)
-}
-
-// CargarRutinas carga una lista de rutinas desde un archivo CSV.
-//
-// Parámetros:
-//   - 'nombreDeArchivo' será una cadena con la ruta del archivo desde donde se cargarán las rutinas.
-//
-// Retorna:
-//   - Un slice de punteros a la estructura 'Rutina'.
-//   - Un error en caso de que ocurra un problema al abrir o leer el archivo.
-//
-// Funcionamiento:
-//
-//	Se declara la variable 'rutinas' que es un slice vacío de punteros a la estructura 'Rutina'
-//	Se declaran las variables 'archivo' y 'err' que funcionarán como receptores del retorno del método 'Open' de 'os', que recibe como argumento a 'nombreDeArchivo' de tipo String
-//	Si hubo un error al abrir el archivo {
-//	    Se retorna nil y un error
-//	}
-//	Se difiere el método 'Close' hasta que el método 'CargarRutinas' termine
-//	Si hubo un error durante la deserealización {
-//	    Se retorna nil y un error
-//	}
-//	Se retorna 'rutinas' y nil
-func CargarRutinas(nombreDeArchivo string) ([]*Rutina, error) {
-	rutinas := []*Rutina{}
-	archivo, err := os.Open(nombreDeArchivo)
-	if err != nil {
-		return nil, err
-	}
-	defer archivo.Close()
-	if err := gocsv.UnmarshalFile(archivo, &rutinas); err != nil {
-		return nil, err
-	}
-	return rutinas, nil
 }

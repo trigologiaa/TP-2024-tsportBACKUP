@@ -1,8 +1,11 @@
 package rutina
 
+//Tests de consultartodaslasrutinas y calcularpropiedades fallan por momentos, a revisar
+
 import (
 	"TP-2024-TSPORT/paquete/ejercicio"
 	"testing"
+
 	"github.com/stretchr/testify/assert"
 )
 
@@ -148,6 +151,52 @@ func TestModificarRutina(t *testing.T) {
     }
     if resultado.Ejercicios != modificada.Ejercicios {
         t.Errorf("Esperado Ejercicios = %s, Obtenido Ejercicios = %s", modificada.Ejercicios, resultado.Ejercicios)
+    }
+}
+
+// TestObtenerTodasLasRutinas verifica que el método ObtenerTodasLasRutinas devuelva todas las rutinas almacenadas.
+//
+// Funcionamiento:
+//	Se declara la variable 'gestorRutinas' llamando a la función 'setup' que inicializa el gestor de rutinas
+//	Se declara la variable ejercicios que es el llamado a la función 'ObtenerTodosLosEjercicios' de 'gestorEjercicios', dando una lista de todos los ejercicios
+//	Se llama al método 'AgregarRutina' de 'gestorRutinas' pasándole como parámetro una nueva instancia de 'Rutina' con ejercicios asignados {
+//		Se inicializa el campo Nombre
+//		Se inicializa el campo Ejercicios
+//	}
+//	Se declara la variable 'rutinasEsperadas' como un slice de punteros a Rutina que contiene todas las rutinas agregadas previamente
+//	Se llama al método 'ObtenerTodasLasRutinas' de 'gestorRutinas'
+//	Se verifica que la cantidad de rutinas obtenidas sea igual a la cantidad esperada
+//	Se verifica que cada rutina obtenida esté presente en el slice de rutinas esperadas
+func TestObtenerTodasLasRutinas(t *testing.T) {
+    gestorRutinas, gestorEjercicios := setup()
+    ejercicios := gestorEjercicios.ObtenerTodosLosEjercicios()
+    gestorRutinas.AgregarRutina(&Rutina{
+        Nombre:     "Rutina 1",
+        Ejercicios: ejercicios[0].Nombre,
+    })
+    gestorRutinas.AgregarRutina(&Rutina{
+        Nombre:     "Rutina 2",
+        Ejercicios: ejercicios[1].Nombre,
+    })
+    rutina1Esperada := &Rutina{
+        Nombre:     "Rutina 1",
+        Ejercicios: ejercicios[0].Nombre,
+    }
+    rutina1Esperada.CalcularPropiedades(gestorEjercicios)
+    rutina2Esperada := &Rutina{
+        Nombre:     "Rutina 2",
+        Ejercicios: ejercicios[1].Nombre,
+    }
+    rutina2Esperada.CalcularPropiedades(gestorEjercicios)
+    rutinasEsperadas := []*Rutina{rutina1Esperada, rutina2Esperada}
+    rutinasObtenidas := gestorRutinas.ObtenerTodasLasRutinas()
+    assert.Equal(t, len(rutinasEsperadas), len(rutinasObtenidas), "La cantidad de rutinas obtenidas no coincide con la cantidad esperada")
+    for i := range rutinasEsperadas {
+        assert.Equal(t, rutinasEsperadas[i].Nombre, rutinasObtenidas[i].Nombre, "El nombre de la rutina no coincide")
+        assert.Equal(t, rutinasEsperadas[i].Ejercicios, rutinasObtenidas[i].Ejercicios, "Los ejercicios de la rutina no coinciden")
+        assert.Equal(t, rutinasEsperadas[i].Tiempo, rutinasObtenidas[i].Tiempo, "El tiempo total de la rutina no es el esperado")
+        assert.Equal(t, rutinasEsperadas[i].Calorias, rutinasObtenidas[i].Calorias, "Las calorías totales de la rutina no son las esperadas")
+        assert.Equal(t, rutinasEsperadas[i].Dificultad, rutinasObtenidas[i].Dificultad, "La dificultad de la rutina no es la esperada")
     }
 }
 
