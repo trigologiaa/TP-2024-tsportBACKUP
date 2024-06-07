@@ -10,28 +10,29 @@ import (
 	"strconv"
 )
 
-//	main es la función principal del programa. Inicializa los gestores de ejercicios y rutinas, y proporciona un menú interactivo para que el usuario gestione ejercicios y rutinas.
+// main es la función principal del programa. Inicializa los gestores de ejercicios y rutinas, y proporciona un menú interactivo para que el usuario gestione ejercicios y rutinas.
 //
-//	Funcionamiento:
-//		Se crea una instancia del gestor de ejercicios utilizando ejercicio.NuevoGestorEjercicios().
-//		Se crea una instancia del gestor de rutinas utilizando rutina.NuevoGestorRutinas(gestorEjercicios).
-//		Se inicializa un scanner para leer la entrada estándar (os.Stdin).
-//		Se entra en un bucle infinito que muestra un menú y procesa las opciones seleccionadas por el usuario.
-//		Dentro del bucle {
-//			Se imprime el menú principal con las opciones disponibles.
-//			Se lee la entrada del usuario utilizando scanner.Scan() y scanner.Text().
-//			Se utiliza una estructura switch para manejar las diferentes opciones del menú {
-//				- Caso "1": Llama a gestionarEjercicios(gestorEjercicios, scanner).
-//				- Caso "2": Llama a gestionarRutinas(gestorRutinas, scanner).
-//				- Caso "3": Solicita el nombre de un archivo y guarda los ejercicios en un CSV utilizando almacenamiento.GuardarEjercicios().
-//				- Caso "4": Solicita el nombre de un archivo y carga los ejercicios desde un CSV utilizando almacenamiento.CargarEjercicios() y agrega cada ejercicio al gestor de ejercicios.
-//				- Caso "5": Solicita el nombre de un archivo y guarda las rutinas en un CSV utilizando almacenamiento.GuardarRutinas().
-//				- Caso "6": Solicita el nombre de un archivo y carga las rutinas desde un CSV utilizando almacenamiento.CargarRutinas() y agrega cada rutina al gestor de rutinas.
-//				- Caso "7": Imprime un mensaje de salida y termina el programa.
-//				- Default: Imprime un mensaje indicando que la opción no es válida.
-//			}
-//			El bucle se rompe si scanner.Scan() devuelve false, indicando el fin de la entrada o un error.
+// Funcionamiento:
+//
+//	Se crea una instancia del gestor de ejercicios utilizando ejercicio.NuevoGestorEjercicios().
+//	Se crea una instancia del gestor de rutinas utilizando rutina.NuevoGestorRutinas(gestorEjercicios).
+//	Se inicializa un scanner para leer la entrada estándar (os.Stdin).
+//	Se entra en un bucle infinito que muestra un menú y procesa las opciones seleccionadas por el usuario.
+//	Dentro del bucle {
+//		Se imprime el menú principal con las opciones disponibles.
+//		Se lee la entrada del usuario utilizando scanner.Scan() y scanner.Text().
+//		Se utiliza una estructura switch para manejar las diferentes opciones del menú {
+//			- Caso "1": Llama a gestionarEjercicios(gestorEjercicios, scanner).
+//			- Caso "2": Llama a gestionarRutinas(gestorRutinas, scanner).
+//			- Caso "3": Solicita el nombre de un archivo y guarda los ejercicios en un CSV utilizando almacenamiento.GuardarEjercicios().
+//			- Caso "4": Solicita el nombre de un archivo y carga los ejercicios desde un CSV utilizando almacenamiento.CargarEjercicios() y agrega cada ejercicio al gestor de ejercicios.
+//			- Caso "5": Solicita el nombre de un archivo y guarda las rutinas en un CSV utilizando almacenamiento.GuardarRutinas().
+//			- Caso "6": Solicita el nombre de un archivo y carga las rutinas desde un CSV utilizando almacenamiento.CargarRutinas() y agrega cada rutina al gestor de rutinas.
+//			- Caso "7": Imprime un mensaje de salida y termina el programa.
+//			- Default: Imprime un mensaje indicando que la opción no es válida.
 //		}
+//		El bucle se rompe si scanner.Scan() devuelve false, indicando el fin de la entrada o un error.
+//	}
 func main() {
 	gestorEjercicios := ejercicio.NuevoGestorEjercicios()
 	gestorRutinas := rutina.NuevoGestorRutinas(gestorEjercicios)
@@ -54,7 +55,7 @@ func main() {
 		case "1":
 			gestionarEjercicios(gestorEjercicios, scanner)
 		case "2":
-			gestionarRutinas(gestorRutinas, scanner)
+			gestionarRutinas(gestorEjercicios, gestorRutinas, scanner)
 		case "3":
 			fmt.Print("Ingrese el nombre del archivo para guardar los ejercicios: ")
 			if scanner.Scan() {
@@ -198,9 +199,7 @@ func gestionarEjercicios(gestor *ejercicio.GestorEjercicios, scanner *bufio.Scan
 	}
 }
 
-func gestionarRutinas(gestor *rutina.GestorRutinas, scanner *bufio.Scanner) {
-	gestorEjercicios := ejercicio.NuevoGestorEjercicios()
-	gestorRutinas := rutina.NuevoGestorRutinas(gestorEjercicios)
+func gestionarRutinas(gestorEjercicios *ejercicio.GestorEjercicios, gestor *rutina.GestorRutinas, scanner *bufio.Scanner) {
 	for {
 		fmt.Println("\n--- Gestión de Rutinas ---")
 		fmt.Println("\n1. Agregar Rutina")
@@ -314,7 +313,7 @@ func gestionarRutinas(gestor *rutina.GestorRutinas, scanner *bufio.Scanner) {
 				fmt.Printf("Rutina: %+v\n", rut)
 			}
 		case "6":
-			gestionarRutinasAutomagicas(gestorRutinas, scanner)
+			gestionarRutinasAutomagicas(gestorEjercicios, gestor, scanner)
 		case "7":
 			return
 		default:
@@ -323,7 +322,8 @@ func gestionarRutinas(gestor *rutina.GestorRutinas, scanner *bufio.Scanner) {
 	}
 }
 
-func gestionarRutinasAutomagicas(gestor *rutina.GestorRutinas, scanner *bufio.Scanner) {
+func gestionarRutinasAutomagicas(gestorEjercicios *ejercicio.GestorEjercicios, gestor *rutina.GestorRutinas, scanner *bufio.Scanner) {
+	todosLosEjercicios := gestorEjercicios.ObtenerTodosLosEjercicios()
 	for {
 		fmt.Println("\n--- Gestión de Rutinas AUTOMÁGICAS ---")
 		fmt.Println("\n1. RUTINA AUTOMÁGICA 1 (Máxima cantidad: Se seleccionarán los ejercicios que cumplan con los parámetros establecidos y que maximicen la cantidad de ejercicios a realizar en el tiempo definido)")
@@ -338,49 +338,50 @@ func gestionarRutinasAutomagicas(gestor *rutina.GestorRutinas, scanner *bufio.Sc
 		switch opcion {
 		case "1":
 			fmt.Print("\nNombre de la rutina: ")
-    		scanner.Scan()
-    		nombre := scanner.Text()
-    		fmt.Print("Duración total en minutos: ")
-    		scanner.Scan()
-   			duracion, _ := strconv.Atoi(scanner.Text())
-    		fmt.Print("Tipo: ")
-    		scanner.Scan()
-    		tipo := scanner.Text()
-    		fmt.Print("Dificultad: ")
-    		scanner.Scan()
-    		dificultad := scanner.Text()
-    		rutina, err := gestor.GenerarRutinaAutomagica1(nombre, duracion, tipo, dificultad)
-    		if err != nil {
-        		fmt.Println("Error al generar la rutina automágica:", err)
-    		} else {
-        		fmt.Println("Rutina automágica generada correctamente:")
-       			fmt.Printf("%+v\n", rutina)
-    		}
-		case "2":
-			fmt.Print("\nNombre de la rutina: ")
 			scanner.Scan()
-    		nombre := scanner.Text()
-			fmt.Print("Calorías totales a quemar: ")
+			nombre := scanner.Text()
+			fmt.Print("Duración total en minutos: ")
 			scanner.Scan()
-    		calorias, _ := strconv.Atoi(scanner.Text())
-			rutina, err := gestor.GenerarRutinaAutomagica2(nombre, calorias)
+			duracion, _ := strconv.Atoi(scanner.Text())
+			fmt.Print("Tipo: ")
+			scanner.Scan()
+			tipo := scanner.Text()
+			fmt.Print("Dificultad: ")
+			scanner.Scan()
+			dificultad := scanner.Text()
+			rutina, err := gestor.GenerarRutinaAutomagica1(todosLosEjercicios, nombre, duracion, tipo, dificultad)
 			if err != nil {
 				fmt.Println("Error al generar la rutina automágica:", err)
 			} else {
 				fmt.Println("Rutina automágica generada correctamente:")
 				fmt.Printf("%+v\n", rutina)
 			}
-			
+			gestor.AgregarRutina(rutina)
+		case "2":
+			fmt.Print("\nNombre de la rutina: ")
+			scanner.Scan()
+			nombre := scanner.Text()
+			fmt.Print("Calorías totales a quemar: ")
+			scanner.Scan()
+			calorias, _ := strconv.Atoi(scanner.Text())
+			rutina, err := gestor.GenerarRutinaAutomagica2(todosLosEjercicios, nombre, calorias)
+			if err != nil {
+				fmt.Println("Error al generar la rutina automágica:", err)
+			} else {
+				fmt.Println("Rutina automágica generada correctamente:")
+				fmt.Printf("%+v\n", rutina)
+			}
+
 		case "3":
 			/*fmt.Print("\nNombre de la rutina: ")
-			scanner.Scan()
-    		nombre := scanner.Text()
-			fmt.Print("Tipos de puntos a maximizar: ")
-			scanner.Scan()
-			tipos := scanner.Text()
-			fmt.Print("Duración máxima de la rutina: ")
-			scanner.Scan()
-			duracion := scanner.Text()*/
+						scanner.Scan()
+			    		nombre := scanner.Text()
+						fmt.Print("Tipos de puntos a maximizar: ")
+						scanner.Scan()
+						tipos := scanner.Text()
+						fmt.Print("Duración máxima de la rutina: ")
+						scanner.Scan()
+						duracion := scanner.Text()*/
 		case "4":
 			return
 		default:
