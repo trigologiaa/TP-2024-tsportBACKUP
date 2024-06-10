@@ -46,11 +46,10 @@ func (g *GestorRutinas) GenerarRutinaAutomagica1(todosLosEjercicios []*ejercicio
 	if len(ejerciciosSeleccionados) == 0 {
 		return nil, errors.New("no se encontraron ejercicios que cumplan con los criterios")
 	}
-	nuevaRutina := &Rutina{
-		Nombre:     nombre,
-		Dificultad: dificultad,
+	if len(ejerciciosSeleccionados) > 6 {
+		return nil, errors.New("exceso de ejercicios seleccionados")
 	}
-	calcularPropiedadesRutinaAutomagica1(nuevaRutina, ejerciciosSeleccionados)
+	nuevaRutina := calcularPropiedadesRutinaAutomagica1(nombre, dificultad, ejerciciosSeleccionados)
 	if err := g.AgregarRutina(nuevaRutina); err != nil {
 		return nil, err
 	}
@@ -151,7 +150,11 @@ func seleccionarEjerciciosRutinaAutomagica1(ejercicios []*ejercicio.Ejercicio, d
 //	Se le asigna a 'Ejercicios' del parámetro 'rutina' el valor de 'nombresEjercicios' con el método 'unirKeys'
 //	Se le asigna a 'Tipos' del parámetro 'rutina' el valor de 'tiposSet' pasado por el método 'mapKeyAStringSlice' con el método 'unirKeys'
 //	Se le asigna a 'PuntosPorTipo' del parámetro 'rutina' el valor de 'puntosTotales'
-func calcularPropiedadesRutinaAutomagica1(rutina *Rutina, ejercicios []*ejercicio.Ejercicio) {
+func calcularPropiedadesRutinaAutomagica1(nombre string, dificultad string, ejercicios []*ejercicio.Ejercicio) *Rutina {
+	nuevaRutina := &Rutina{
+		Nombre:     nombre,
+		Dificultad: dificultad,
+	}
 	var tiempoTotal, caloriasTotales, puntosTotales int
 	nombresEjercicios := make([]string, 0)
 	tiposSet := make(map[string]bool)
@@ -162,9 +165,10 @@ func calcularPropiedadesRutinaAutomagica1(rutina *Rutina, ejercicios []*ejercici
 		nombresEjercicios = append(nombresEjercicios, ejercicio.Nombre)
 		tiposSet[ejercicio.Tipo] = true
 	}
-	rutina.Tiempo = tiempoTotal
-	rutina.Calorias = caloriasTotales
-	rutina.Ejercicios = unirKeys(nombresEjercicios, ", ")
-	rutina.Tipos = unirKeys(mapKeysAStringSlice(tiposSet), ", ")
-	rutina.PuntosPorTipo = puntosTotales
+	nuevaRutina.Tiempo = tiempoTotal
+	nuevaRutina.Calorias = caloriasTotales
+	nuevaRutina.Ejercicios = unirKeys(nombresEjercicios, ", ")
+	nuevaRutina.Tipos = unirKeys(mapKeysAStringSlice(tiposSet), ", ")
+	nuevaRutina.PuntosPorTipo = puntosTotales
+	return nuevaRutina
 }

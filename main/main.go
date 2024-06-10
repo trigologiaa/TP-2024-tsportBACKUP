@@ -35,6 +35,16 @@ import (
 //	}
 func main() {
 	gestorEjercicios := ejercicio.NuevoGestorEjercicios()
+	ejercicios, err := almacenamiento.CargarEjerciciosDeUna()
+	if err != nil {
+		fmt.Println("Error al iniciar los ejercicios:", err)
+	} else {
+		for _, ej := range ejercicios {
+			gestorEjercicios.AgregarEjercicio(ej)
+		}
+		fmt.Println("Ejercicios iniciados correctamente.")
+	}
+
 	gestorRutinas := rutina.NuevoGestorRutinas(gestorEjercicios)
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
