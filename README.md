@@ -7,7 +7,7 @@
 <div id="video-play-button-container-3721493" class="video-play-button-container" data-video-id="3721493">
 <img class="video-play-button hidden" src="/images/icons/icon_play.png" alt="play">
 <div class="video-spinner-container hidden"></div>
-</div>
+</div><source id="detailed-item-video-src-mp4" src="https://rvideos1.memedroid.com/videos/UPLOADED733/62ba5555b17e4.mp4" type="video/mp4"><source id="detailed-item-video-src-webm" src="https://rvideos1.memedroid.com/videos/UPLOADED733/62ba5555b17e4.webm" type="video/webm">
 
 <h3 align="center">Resumen</h2>
 
