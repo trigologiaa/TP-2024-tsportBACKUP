@@ -1,14 +1,7 @@
 <h1 align="center">CONCLUSIÓN</h1>
 
-<div style="text-align: center;">
-  <video width="320" height="240" controls>
-    <source src="D:/UNTREF/AlgoritmosyProgramaciónII/TP-2024-tsport/Extras/STK-20211120-WA0004.mp4" type="video/mp4">
-    Tu navegador no soporta la etiqueta de video.
-  </video>
-</div>
-
 <p align="center">
-  <img src="D:/UNTREF/AlgoritmosyProgramaciónII/TP-2024-tsport/Extras/STK-20211120-WA0004.mp4" alt="Texto alternativo">
+  <img src="https://twitter.com/i/status/1738443047719809126" alt="Texto alternativo">
 </p>
 
 <h3 align="center">Resumen</h2>
