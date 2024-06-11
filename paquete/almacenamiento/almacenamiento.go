@@ -6,7 +6,6 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-
 	"github.com/gocarina/gocsv"
 )
 
@@ -30,7 +29,6 @@ func init() {
 //      - Un error en caso de que ocurra un problema al abrir o escribir en el archivo.
 //      - El método 'MarshalFile' en caso de que se haya ejecutado correctamente.
 func GuardarEjercicios(ejercicios []*ejercicio.Ejercicio, nombreDeArchivo string) error {
-	// Especifica la ruta completa del archivo
 	rutaCompleta := filepath.Join("/home/lauty/Documents/AYP2/TP-2024-tsportBACKUP/informacion", nombreDeArchivo)
 	archivo, err := os.OpenFile(rutaCompleta, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
 	if err != nil {
