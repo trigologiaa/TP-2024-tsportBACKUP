@@ -1,8 +1,49 @@
-Nombre,Descripcion,Tiempo,Calorias,Tipo,Puntos,Dificultad
-Caminar,Ejercicio aerobico,60,37,Cardio,0,Principiante
-Correr,Ejercicio aerobico,60,100,Cardio,1,Principiante
-Escaleras,Subir y bajar escaleras,60,205,Prueba,2,Intermedio
-Bicicleta,Andar en bicicleta,60,150,Cardio,1,Principiante
-Natación,Andar en agua,60,222,Cardio,2,Principiante
-Prueba,Prueba,60,45,Prueba,55,Prueba
-prueba,vdsklnc wvrhtr   gr ege,60,12,cdsvr,213,vfeavre
+Nombre,Descripcion,TiempoEnSegundos,Calorias,Tipo,Puntos,Dificultad
+Burpees,"Ejercicio completo que combina una sentadilla, una flexión y un salto",60,10,Cardio,5,Media
+Sentadillas,Ejercicio para fortalecer piernas y glúteos,90,8,Fuerza,4,Baja
+Plancha,Ejercicio isométrico para fortalecer el core,120,6,Fuerza,3,Media
+Saltar la cuerda,Ejercicio de alta intensidad para mejorar el cardio y la coordinación,180,15,Cardio,6,Alta
+Flexiones,Ejercicio de empuje para trabajar pecho y tríceps,60,7,Fuerza,4,Media
+Abdominales,Ejercicio clásico para fortalecer los músculos del abdomen,90,5,Fuerza,3,Baja
+Estiramientos de piernas,Ejercicio para mejorar la flexibilidad de las piernas,120,2,Flexibilidad,2,Baja
+Dominadas,Ejercicio de tracción para trabajar espalda y bíceps,60,8,Fuerza,5,Alta
+Tijeras,Ejercicio de piernas que imita el movimiento de tijeras,90,9,Cardio,4,Media
+Zancadas,"Ejercicio para fortalecer piernas y glúteos, alternando piernas",120,7,Fuerza,5,Media
+Mountain Climbers,Ejercicio cardiovascular que imita la escalada de montaña,60,12,Cardio,6,Alta
+Puente,Ejercicio para fortalecer glúteos y parte baja de la espalda,90,4,Fuerza,3,Baja
+Estiramiento de espalda,Ejercicio para mejorar la flexibilidad de la espalda,120,2,Flexibilidad,2,Baja
+Skipping,Ejercicio de alta intensidad que simula correr en el lugar,60,11,Cardio,5,Media
+Bicicleta en el suelo,Ejercicio para fortalecer los músculos abdominales y las piernas,90,7,Fuerza,4,Media
+Estiramientos de brazos,Ejercicio para mejorar la flexibilidad de los brazos,60,1,Flexibilidad,1,Baja
+Remo invertido,Ejercicio para trabajar la parte superior de la espalda,60,8,Fuerza,5,Media
+Rodillas al pecho,Ejercicio para fortalecer el core y las piernas,60,9,Cardio,5,Alta
+Press militar con mancuernas,Ejercicio para trabajar los hombros,90,6,Fuerza,4,Media
+Estiramiento de cuello,Ejercicio para mejorar la flexibilidad del cuello,60,1,Flexibilidad,1,Baja
+Escalador lateral,Ejercicio cardiovascular que simula el movimiento de escalar lateralmente,60,11,Cardio,5,Media
+Flexiones diamante,Variante de flexión que trabaja más los tríceps,60,8,Fuerza,4,Alta
+Estocadas laterales,Ejercicio para fortalecer las piernas y mejorar la movilidad lateral,90,6,Fuerza,3,Media
+Flexión con palmada,Variante explosiva de la flexión,60,10,Fuerza,5,Alta
+Sentadilla con salto,Ejercicio que combina la sentadilla con un salto para mayor intensidad,60,12,Cardio,5,Media
+Remo con mancuerna,Ejercicio para trabajar la espalda con una mancuerna,90,7,Fuerza,4,Media
+Estiramiento de isquiotibiales,Ejercicio para mejorar la flexibilidad de los isquiotibiales,60,1,Flexibilidad,1,Baja
+Flexiones inclinadas,Variante de flexión que trabaja más la parte superior del pecho,60,7,Fuerza,4,Media
+Flexiones declinadas,Variante de flexión que trabaja más la parte inferior del pecho,60,7,Fuerza,4,Media
+Estocadas inversas,Ejercicio para fortalecer las piernas con una estocada hacia atrás,90,6,Fuerza,3,Media
+Saltos estrella,Ejercicio cardiovascular donde se abren y cierran brazos y piernas en el aire,60,12,Cardio,5,Media
+Estiramiento de cuádriceps,Ejercicio para mejorar la flexibilidad de los cuádriceps,60,1,Flexibilidad,1,Baja
+Estiramiento de glúteos,Ejercicio para mejorar la flexibilidad de los glúteos,60,1,Flexibilidad,1,Baja
+Jumping jacks,Ejercicio cardiovascular clásico de bajo impacto,60,10,Cardio,5,Baja
+Caminata en posición de oso,Ejercicio para trabajar el core y los hombros,60,8,Fuerza,4,Media
+Sprint en el lugar,Ejercicio de alta intensidad para mejorar la velocidad y resistencia,60,15,Cardio,6,Alta
+Estiramiento de pectorales,Ejercicio para mejorar la flexibilidad del pecho,60,1,Flexibilidad,1,Baja
+Flexiones con rotación,Variante de flexión que añade un giro para trabajar el core,60,9,Fuerza,5,Media
+Estiramiento de tríceps,Ejercicio para mejorar la flexibilidad de los tríceps,60,1,Flexibilidad,1,Baja
+Flexiones Spiderman,Variante de flexión que añade un movimiento lateral de las piernas,60,10,Fuerza,5,Alta
+Sentadilla sumo,Variante de sentadilla que trabaja más los músculos internos de las piernas,60,8,Fuerza,4,Media
+Estiramiento de gemelos,Ejercicio para mejorar la flexibilidad de los gemelos,60,1,Flexibilidad,1,Baja
+Subida de escaleras,Ejercicio cardiovascular que imita subir escaleras,60,12,Cardio,5,Media
+Flexiones hindú,Variante de flexión que añade un movimiento de ola para trabajar más músculos,60,9,Fuerza,5,Media
+Sentadilla búlgara,Variante de sentadilla con una pierna elevada,60,10,Fuerza,5,Alta
+Estiramiento de muñecas,Ejercicio para mejorar la flexibilidad de las muñecas,60,1,Flexibilidad,1,Baja
+Puente de glúteos,Ejercicio para fortalecer los glúteos y la parte baja de la espalda,60,7,Fuerza,4,Baja
+Estiramiento de hombros,Ejercicio para mejorar la flexibilidad de los hombros,60,1,Flexibilidad,1,Baja

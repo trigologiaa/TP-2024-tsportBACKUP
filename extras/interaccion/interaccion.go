@@ -176,7 +176,7 @@ func crearEjercicio() {
 	nuevoEjercicio := &ejercicio.Ejercicio{
 		Nombre:      nombre,
 		Descripcion: descripcion,
-		Tiempo:      tiempo,
+		TiempoEnSegundos:      tiempo,
 		Calorias:    calorias,
 		Tipo:        tipos,
 		Puntos:      puntos,
@@ -273,7 +273,7 @@ func crearRutina() {
 	nuevoEjercicio := &ejercicio.Ejercicio{
 		Nombre:      nombre,
 		Descripcion: descripcion,
-		Tiempo:      tiempo, // Tiempo estimado en minutos
+		TiempoEnSegundos:      tiempo, // Tiempo estimado en minutos
 		Calorias:    calorias,
 		Tipo:        tipos,
 		Puntos:      puntos,

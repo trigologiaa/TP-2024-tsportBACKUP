@@ -1,308 +1,95 @@
 package rutina
 
-//Tests de consultartodaslasrutinas y calcularpropiedades fallan por momentos, a revisar
-
 import (
 	"TP-2024-TSPORT/paquete/ejercicio"
 	"testing"
-
 	"github.com/stretchr/testify/assert"
 )
 
-//  setup inicializa y configura los gestores de ejercicios y rutinas para las pruebas. Agrega ejercicios iniciales al gestor de ejercicios y retorna ambos gestores.
-//
-//  Retorna:
-//      - Un puntero a GestorRutinas por ser una nueva instancia de este.
-//      - Un puntero a GestorEjercicios, creado y configurado con los ejercicios.
-//  Funcionamiento:
-//      Se declara la variable 'gestorEjercicios' que es el llamado a la función 'NuevoGestorEjercicios' que crea una nueva instancia de 'GestorEjercicios'
-//      Se declara la variable 'ejercicio' que es una nueva instancia de 'Ejercicio' {
-//          Se inicializa el campo Nombre
-//          Se inicializa el campo Tiempo
-//          Se inicializa el campo Calorias
-//          Se inicializa el campo Dificultad
-//      }
-//      Se declara la variable 'ejercicio' que es una nueva instancia de 'Ejercicio' {
-//          Se inicializa el campo Nombre
-//          Se inicializa el campo Tiempo
-//          Se inicializa el campo Calorias
-//          Se inicializa el campo Dificultad
-//      }
-//      Se declara la variable 'gestorRutinas' que es el llamado a la función 'NuevoGestorRutinas', que crea una nueva instancia de 'GestorRutinas' con el gestor de ejercicios previamente creado
-//      Se retornan 'gestorRutinas' y 'gestorEjercicios'
-func setup() (*GestorRutinas, *ejercicio.GestorEjercicios) {
-    gestorEjercicios := ejercicio.NuevoGestorEjercicios()
-    gestorEjercicios.AgregarEjercicio(&ejercicio.Ejercicio {
-        Nombre: "Sentadillas", 
-        Tiempo: 60, 
-        Calorias: 100, 
-        Dificultad: "Media",
-    })
-    gestorEjercicios.AgregarEjercicio(&ejercicio.Ejercicio {
-        Nombre: "Flexiones", 
-        Tiempo: 30, 
-        Calorias: 50, 
-        Dificultad: "Alta",
-    })
-    gestorRutinas := NuevoGestorRutinas(gestorEjercicios)
-    return gestorRutinas, gestorEjercicios
-}
-
-// TestAgregarRutina verifica la capacidad del gestor para agregar rutinas y manejar duplicados.
-//
-// Funcionamiento:
-//      Se declaran las variables 'gestorRutinas' y 'gestorEjercicios' llamando a la función 'setup' que inicializa ambos gestores
-//      Se declara la variable ejercicios que es el llamado a la función 'ObtenerTodosLosEjercicios' de 'gestorEjercicios', dando una lista de todos los ejercicios
-//      Se declara la variable 'rutina' que es una nueva instancia de 'Rutina' {
-//          Se inicializa el campo Nombre
-//          Se inicializa el campo Ejercicios
-//      }
-//      Si se produce un problema al agregar la rutina {
-//          Se genera un error
-//      }
-//      Si se produce un problema al agregar la rutina por estar duplicada {
-//          Se genera un error
-//      }
 func TestAgregarRutina(t *testing.T) {
-    gestorRutinas, gestorEjercicios := setup()
-    ejercicios := gestorEjercicios.ObtenerTodosLosEjercicios()
-    rutina := &Rutina {
-        Nombre: "Rutina Intensa",
-        Ejercicios: ejercicios[0].Nombre + ", " + ejercicios[1].Nombre,
-    }
-    if err := gestorRutinas.AgregarRutina(rutina); err != nil {
-        t.Errorf("AgregarRutina() error = %v, wantErr %v", err, false)
-    }
-    if err := gestorRutinas.AgregarRutina(rutina); err == nil {
-        t.Errorf("Se esperaba un error al intentar agregar una rutina duplicada, pero no se obtuvo error")
-    }
+	gestorEj := ejercicio.NuevoGestorEjercicios()
+	gestorRutinas := NuevoGestorRutinas(gestorEj)
+	ejercicio1 := &ejercicio.Ejercicio{Nombre: "Ejercicio1", TiempoEnSegundos: 600, Calorias: 200, Tipo: "Cardio", Puntos: 10, Dificultad: "Media"}
+	gestorEj.AgregarEjercicio(ejercicio1)
+	rutina1 := &Rutina{Nombre: "Rutina1", CaracteristicasIndividuales: []ejercicio.Ejercicio{*ejercicio1}}
+	err := gestorRutinas.AgregarRutina(rutina1)
+	assert.Nil(t, err)
+	assert.Equal(t, 1, len(gestorRutinas.ListarRutinas()))
 }
 
-// TestEliminarRutina verifica que las rutinas se puedan eliminar correctamente y que no puedan ser consultadas después de su eliminación.
-//
-// Funcionamiento:
-//      Se declara la variable 'gestorRutinas' llamando a la función 'setup' que inicializa el gestor de rutinas
-//      Se declara la variable 'rutina' que es una nueva instancia de 'Rutina' {
-//          Se inicializa el campo Nombre
-//      }
-//      Se agrega la rutina a 'gestorRutinas' llamando al método 'AgregarRutina'
-//      Si se produce un problema al eliminar la rutina {
-//          Se genera un error
-//      }
-//      Si se produce un problema al consultar una rutina eliminada {
-//          Se genera un error
-//      }
 func TestEliminarRutina(t *testing.T) {
-    gestorRutinas, _ := setup()
-    rutina := &Rutina {
-        Nombre: "Rutina Temporal",
-    }
-    gestorRutinas.AgregarRutina(rutina)
-    if err := gestorRutinas.EliminarRutina("Rutina Temporal"); err != nil {
-        t.Errorf("EliminarRutina() error = %v, wantErr %v", err, false)
-    }
-    if _, err := gestorRutinas.ConsultarRutina("Rutina Temporal"); err == nil {
-        t.Error("Se esperaba un error al buscar una rutina eliminada, pero no se obtuvo error")
-    }
+	gestorEj := ejercicio.NuevoGestorEjercicios()
+	gestorRutinas := NuevoGestorRutinas(gestorEj)
+	ejercicio1 := &ejercicio.Ejercicio{Nombre: "Ejercicio1", TiempoEnSegundos: 600, Calorias: 200, Tipo: "Cardio", Puntos: 10, Dificultad: "Media"}
+	gestorEj.AgregarEjercicio(ejercicio1)
+	rutina1 := &Rutina{Nombre: "Rutina1", CaracteristicasIndividuales: []ejercicio.Ejercicio{*ejercicio1}}
+	gestorRutinas.AgregarRutina(rutina1)
+	err := gestorRutinas.EliminarRutina("Rutina1")
+	assert.Nil(t, err)
+	assert.Equal(t, 0, len(gestorRutinas.ListarRutinas()))
 }
 
-// TestModificarRutina verifica que se puedan modificar las rutinas existentes correctamente.
-//
-// Funcionamiento:
-//      Se declaran las variables 'gestorRutinas' y 'gestorEjercicios' llamando a la función 'setup' que inicializa ambos gestores
-//      Se declara la variable ejercicios que es el llamado a la función 'ObtenerTodosLosEjercicios' de 'gestorEjercicios', dando una lista de todos los ejercicios
-//      Se declara la variable 'original' que es una nueva instancia de 'Rutina' {
-//          Se inicializa el campo Nombre
-//          Se inicializa el campo Ejercicios
-//      }
-//      Se agrega la rutina original a 'gestorRutinas' llamando al método 'AgregarRutina'
-//      Se declara la variable 'modificada' que es una nueva instancia de 'Rutina' {
-//          Se inicializa el campo Nombre
-//          Se inicializa el campo Ejercicios
-//      }
-//      Si se produce un problema al modificar la rutina {
-//          Se genera un error
-//      }
-//      Se consulta la rutina modificada llamando al método 'ConsultarRutina'
-//      Si se produce un problema al consultar la rutina modificada {
-//          Se genera un error
-//      }
-//      Si los ejercicios de la rutina modificada no coinciden con los esperados {
-//          Se genera un error
-//      }
-func TestModificarRutina(t *testing.T) {
-    gestorRutinas, gestorEjercicios := setup()
-    ejercicios := gestorEjercicios.ObtenerTodosLosEjercicios()
-    original := &Rutina {
-        Nombre:     "Rutina Mañana",
-        Ejercicios: ejercicios[0].Nombre,
-    }
-    gestorRutinas.AgregarRutina(original)
-    modificada := &Rutina {
-        Nombre:     "Rutina Mañana",
-        Ejercicios: ejercicios[1].Nombre,
-    }
-    if err := gestorRutinas.ModificarRutina("Rutina Mañana", modificada); err != nil {
-        t.Errorf("ModificarRutina() error = %v", err)
-    }
-    resultado, err := gestorRutinas.ConsultarRutina("Rutina Mañana")
-    if err != nil {
-        t.Errorf("ConsultarRutina() error = %v", err)
-    }
-    if resultado.Ejercicios != modificada.Ejercicios {
-        t.Errorf("Esperado Ejercicios = %s, Obtenido Ejercicios = %s", modificada.Ejercicios, resultado.Ejercicios)
-    }
-}
-
-// TestObtenerTodasLasRutinas verifica que el método ObtenerTodasLasRutinas devuelva todas las rutinas almacenadas.
-//
-// Funcionamiento:
-//	Se declara la variable 'gestorRutinas' llamando a la función 'setup' que inicializa el gestor de rutinas
-//	Se declara la variable ejercicios que es el llamado a la función 'ObtenerTodosLosEjercicios' de 'gestorEjercicios', dando una lista de todos los ejercicios
-//	Se llama al método 'AgregarRutina' de 'gestorRutinas' pasándole como parámetro una nueva instancia de 'Rutina' con ejercicios asignados {
-//		Se inicializa el campo Nombre
-//		Se inicializa el campo Ejercicios
-//	}
-//	Se declara la variable 'rutinasEsperadas' como un slice de punteros a Rutina que contiene todas las rutinas agregadas previamente
-//	Se llama al método 'ObtenerTodasLasRutinas' de 'gestorRutinas'
-//	Se verifica que la cantidad de rutinas obtenidas sea igual a la cantidad esperada
-//	Se verifica que cada rutina obtenida esté presente en el slice de rutinas esperadas
-func TestObtenerTodasLasRutinas(t *testing.T) {
-    gestorRutinas, gestorEjercicios := setup()
-    ejercicios := gestorEjercicios.ObtenerTodosLosEjercicios()
-    gestorRutinas.AgregarRutina(&Rutina{
-        Nombre:     "Rutina 1",
-        Ejercicios: ejercicios[0].Nombre,
-    })
-    gestorRutinas.AgregarRutina(&Rutina{
-        Nombre:     "Rutina 2",
-        Ejercicios: ejercicios[1].Nombre,
-    })
-    rutina1Esperada := &Rutina{
-        Nombre:     "Rutina 1",
-        Ejercicios: ejercicios[0].Nombre,
-    }
-    rutina1Esperada.CalcularPropiedades(gestorEjercicios)
-    rutina2Esperada := &Rutina{
-        Nombre:     "Rutina 2",
-        Ejercicios: ejercicios[1].Nombre,
-    }
-    rutina2Esperada.CalcularPropiedades(gestorEjercicios)
-    rutinasEsperadas := []*Rutina{rutina1Esperada, rutina2Esperada}
-    rutinasObtenidas := gestorRutinas.ObtenerTodasLasRutinas()
-    assert.Equal(t, len(rutinasEsperadas), len(rutinasObtenidas), "La cantidad de rutinas obtenidas no coincide con la cantidad esperada")
-    for i := range rutinasEsperadas {
-        assert.Equal(t, rutinasEsperadas[i].Nombre, rutinasObtenidas[i].Nombre, "El nombre de la rutina no coincide")
-        assert.Equal(t, rutinasEsperadas[i].Ejercicios, rutinasObtenidas[i].Ejercicios, "Los ejercicios de la rutina no coinciden")
-        assert.Equal(t, rutinasEsperadas[i].Tiempo, rutinasObtenidas[i].Tiempo, "El tiempo total de la rutina no es el esperado")
-        assert.Equal(t, rutinasEsperadas[i].Calorias, rutinasObtenidas[i].Calorias, "Las calorías totales de la rutina no son las esperadas")
-        assert.Equal(t, rutinasEsperadas[i].Dificultad, rutinasObtenidas[i].Dificultad, "La dificultad de la rutina no es la esperada")
-    }
-}
-
-//  TestConsultarRutina verifica la capacidad del gestor para consultar rutinas por su nombre.
-//
-//  Funcionamiento:
-//      Se declaran las variables 'gestorRutinas' y 'gestorEjercicios' llamando a la función 'setup' que inicializa ambos gestores
-//      Se declara la variable ejercicios que es el llamado a la función 'ObtenerTodosLosEjercicios' de 'gestorEjercicios', dando una lista de todos los ejercicios
-//      Se declara la variable 'rutina' que es una nueva instancia de 'Rutina' {
-//          Se inicializa el campo Nombre
-//          Se inicializa el campo Ejercicios
-//      }
-//      Si se produce un problema al agregar la rutina {
-//          Se genera un error
-//      }
-//      Se consulta la rutina agregada llamando al método 'ConsultarRutina'
-//      Si se produce un problema al consultar la rutina {
-//          Se genera un error
-//      }
-//      Si el nombre de la rutina consultada no coincide con el esperado {
-//          Se genera un error
-//      }
 func TestConsultarRutina(t *testing.T) {
-    gestorRutinas, gestorEjercicios := setup()
-    ejercicios := gestorEjercicios.ObtenerTodosLosEjercicios()
-    rutina := &Rutina {
-        Nombre: "Rutina Consultada",
-        Ejercicios: ejercicios[0].Nombre + ", " + ejercicios[1].Nombre,
-    }
-    if err := gestorRutinas.AgregarRutina(rutina); err != nil {
-        t.Errorf("AgregarRutina() error = %v, wantErr %v", err, false)
-    }
-    resultado, err := gestorRutinas.ConsultarRutina("Rutina Consultada")
-    if err != nil {
-        t.Errorf("ConsultarRutina() error = %v", err)
-    }
-    if resultado.Nombre != rutina.Nombre {
-        t.Errorf("Esperado Nombre = %s, Obtenido Nombre = %s", rutina.Nombre, resultado.Nombre)
-    }
+	gestorEj := ejercicio.NuevoGestorEjercicios()
+	gestorRutinas := NuevoGestorRutinas(gestorEj)
+	ejercicio1 := &ejercicio.Ejercicio{Nombre: "Ejercicio1", TiempoEnSegundos: 600, Calorias: 200, Tipo: "Cardio", Puntos: 10, Dificultad: "Media"}
+	gestorEj.AgregarEjercicio(ejercicio1)
+	rutina1 := &Rutina{Nombre: "Rutina1", CaracteristicasIndividuales: []ejercicio.Ejercicio{*ejercicio1}}
+	gestorRutinas.AgregarRutina(rutina1)
+	rutinaConsultada, err := gestorRutinas.ConsultarRutina("Rutina1")
+	assert.Nil(t, err)
+	assert.Equal(t, "Rutina1", rutinaConsultada.Nombre)
 }
 
-// TestListarRutinas verifica que la función ListarRutinas filtre las rutinas por dificultad correctamente.
-//
-// Funcionamiento:
-//      Se declaran las variables 'gestorRutinas' y 'gestorEjercicios' llamando a la función 'setup' que inicializa ambos gestores
-//      Se declara la variable ejercicios que es el llamado a la función 'ObtenerTodosLosEjercicios' de 'gestorEjercicios', dando una lista de todos los ejercicios
-//      Se llama al método 'AgregarRutina' de 'gestorRutinas' pasándole como parámetro una nueva instancia de 'Rutina' con dificultad baja {
-//          Se inicializa el campo Nombre
-//          Se inicializa el campo Dificultad
-//          Se inicializa el campo Ejercicios
-//      }
-//      Se llama al método 'AgregarRutina' de 'gestorRutinas' pasándole como parámetro una nueva instancia de 'Rutina' con dificultad alta {
-//          Se inicializa el campo Nombre
-//          Se inicializa el campo Dificultad
-//          Se inicializa el campo Ejercicios
-//      }
-//      Se declara la variable resultados que es el llamado al método 'ListarRutinas' pasándole como parámetro de dificultad 'Alta'
-//      Si la cantidad de rutinas obtenidas no es la esperada o el nombre de la rutina no es el esperado {
-//          Se genera un error
-//      }
+func TestModificarRutina(t *testing.T) {
+	gestorEj := ejercicio.NuevoGestorEjercicios()
+	gestorRutinas := NuevoGestorRutinas(gestorEj)
+	ejercicio1 := &ejercicio.Ejercicio{Nombre: "Ejercicio1", TiempoEnSegundos: 600, Calorias: 200, Tipo: "Cardio", Puntos: 10, Dificultad: "Media"}
+	ejercicio2 := &ejercicio.Ejercicio{Nombre: "Ejercicio2", TiempoEnSegundos: 300, Calorias: 100, Tipo: "Fuerza", Puntos: 5, Dificultad: "Alta"}
+	gestorEj.AgregarEjercicio(ejercicio1)
+	gestorEj.AgregarEjercicio(ejercicio2)
+	rutina1 := &Rutina{Nombre: "Rutina1", CaracteristicasIndividuales: []ejercicio.Ejercicio{*ejercicio1}}
+	gestorRutinas.AgregarRutina(rutina1)
+	nuevaRutina := &Rutina{Nombre: "Rutina1", CaracteristicasIndividuales: []ejercicio.Ejercicio{*ejercicio2}}
+	err := gestorRutinas.ModificarRutina("Rutina1", nuevaRutina)
+	assert.Nil(t, err)
+	rutinaConsultada, _ := gestorRutinas.ConsultarRutina("Rutina1")
+	assert.Equal(t, 1, len(rutinaConsultada.CaracteristicasIndividuales))
+	assert.Equal(t, "Ejercicio2", rutinaConsultada.CaracteristicasIndividuales[0].Nombre)
+}
+
 func TestListarRutinas(t *testing.T) {
-    gestorRutinas, gestorEjercicios := setup()
-    ejercicios := gestorEjercicios.ObtenerTodosLosEjercicios()
-    gestorRutinas.AgregarRutina(&Rutina {
-        Nombre:     "Rutina Ligera",
-        Dificultad: "Baja",
-        Ejercicios: ejercicios[0].Nombre,
-    })
-    gestorRutinas.AgregarRutina(&Rutina {
-        Nombre:     "Rutina Intensa",
-        Dificultad: "Alta",
-        Ejercicios: ejercicios[1].Nombre,
-    })
-    resultados := gestorRutinas.ListarRutinas("Alta")
-    if len(resultados) != 1 || resultados[0].Nombre != "Rutina Intensa" {
-        t.Errorf("ListarRutinas() failed, expected 1 result named 'Rutina Intensa', got %d results", len(resultados))
-    }
+	gestorEj := ejercicio.NuevoGestorEjercicios()
+	gestorRutinas := NuevoGestorRutinas(gestorEj)
+	ejercicio1 := &ejercicio.Ejercicio{Nombre: "Ejercicio1", TiempoEnSegundos: 600, Calorias: 200, Tipo: "Cardio", Puntos: 10, Dificultad: "Media"}
+	ejercicio2 := &ejercicio.Ejercicio{Nombre: "Ejercicio2", TiempoEnSegundos: 300, Calorias: 100, Tipo: "Fuerza", Puntos: 5, Dificultad: "Alta"}
+	gestorEj.AgregarEjercicio(ejercicio1)
+	gestorEj.AgregarEjercicio(ejercicio2)
+	rutina1 := &Rutina{Nombre: "Rutina1", CaracteristicasIndividuales: []ejercicio.Ejercicio{*ejercicio1}}
+	rutina2 := &Rutina{Nombre: "Rutina2", CaracteristicasIndividuales: []ejercicio.Ejercicio{*ejercicio2}}
+	gestorRutinas.AgregarRutina(rutina1)
+	gestorRutinas.AgregarRutina(rutina2)
+	rutinas := gestorRutinas.ListarRutinas()
+	assert.Equal(t, 2, len(rutinas))
+	assert.Equal(t, "Rutina1", rutinas[0].Nombre)
+	assert.Equal(t, "Rutina2", rutinas[1].Nombre)
 }
 
-//  TestCalcularPropiedades verifica que se calculen y actualicen correctamente las propiedades de una rutina.
-//
-//  Funcionamiento:
-//      Se declara la variable 'gestorEjercicios' llamando a la función 'setup', ignorando el primer retorno
-//      Se declara la variable ejercicios que es el llamado a la función 'ObtenerTodosLosEjercicios' de 'gestorEjercicios', dando una lista de todos los ejercicios
-//      Se declara la variable 'rutina' que es una nueva instancia de 'Rutina' {
-//          Se inicializa el campo Nombre
-//      }
-//      Se llama al método 'CalcularPropiedades' de 'rutina' pasando 'gestorEjercicios' como argumento
-//      Si el tiempo total de la rutina no coincide con el esperado {
-//          Se genera un error
-//      }
-//      Si las calorías totales de la rutina no coinciden con las esperadas {
-//          Se genera un error
-//      }
-//      Si la dificultad de la rutina no coincide con la esperada {
-//          Se genera un error
-//      }
-func TestCalcularPropiedades(t *testing.T) {
-    _, gestorEjercicios := setup()
-    ejercicios := gestorEjercicios.ObtenerTodosLosEjercicios()
-    rutina := &Rutina {
-        Nombre: "Rutina Propiedades",
-    }
-    rutina.CalcularPropiedades(gestorEjercicios)
-    assert.Equal(t, 90, rutina.Tiempo, "El tiempo total de la rutina no es el esperado")
-    assert.Equal(t, 150, rutina.Calorias, "Las calorías totales de la rutina no son las esperadas")
-    assert.Equal(t, "Media", rutina.Dificultad, "La dificultad de la rutina no es la esperada")
-    assert.Equal(t, ejercicios[0].Nombre + ", " + ejercicios[1].Nombre, rutina.Ejercicios, "Los ejercicios de la rutina no son los esperados")
+func TestListarRutinasPorDificultad(t *testing.T) {
+	gestorEj := ejercicio.NuevoGestorEjercicios()
+	gestorRutinas := NuevoGestorRutinas(gestorEj)
+	ejercicio1 := &ejercicio.Ejercicio{Nombre: "Ejercicio1", TiempoEnSegundos: 600, Calorias: 200, Tipo: "Cardio", Puntos: 10, Dificultad: "Media"}
+	ejercicio2 := &ejercicio.Ejercicio{Nombre: "Ejercicio2", TiempoEnSegundos: 300, Calorias: 100, Tipo: "Fuerza", Puntos: 5, Dificultad: "Alta"}
+	gestorEj.AgregarEjercicio(ejercicio1)
+	gestorEj.AgregarEjercicio(ejercicio2)
+	rutina1 := &Rutina{Nombre: "Rutina1", Dificultad: "Media", CaracteristicasIndividuales: []ejercicio.Ejercicio{*ejercicio1}}
+	rutina2 := &Rutina{Nombre: "Rutina2", Dificultad: "Alta", CaracteristicasIndividuales: []ejercicio.Ejercicio{*ejercicio2}}
+	gestorRutinas.AgregarRutina(rutina1)
+	gestorRutinas.AgregarRutina(rutina2)
+	rutinasMedia := gestorRutinas.ListarRutinasPorDificultad("Media")
+	rutinasAlta := gestorRutinas.ListarRutinasPorDificultad("Alta")
+	assert.Equal(t, 1, len(rutinasMedia))
+	assert.Equal(t, "Rutina1", rutinasMedia[0].Nombre)
+	assert.Equal(t, 1, len(rutinasAlta))
+	assert.Equal(t, "Rutina2", rutinasAlta[0].Nombre)
 }

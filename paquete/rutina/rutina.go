@@ -3,36 +3,25 @@ package rutina
 import (
 	"TP-2024-TSPORT/paquete/ejercicio"
 	"errors"
+	//"sort"
+	"strings"
+
 	list "github.com/untref-ayp2/data-structures/list"
 )
 
 // Rutina es una estructura con las características que tendrá su campo.
-//
-// Funcionamiento:
-//
-//	Se define el nombre de la rutina
-//	Se define el conjunto de ejercicios que contiene la rutina
-//	Se define el tiempo en segundos
-//	Se define la cantidad total de calorías quemadas
-//	Se define la dificultad de la rutina
-//	Se define el tipo de rutina
-//	Se define la cantidad de puntos totales
 type Rutina struct {
-	Nombre        string `csv:"Nombre"`        //Nombre de la rutina
-	Ejercicios    string `csv:"Ejercicios"`    //Ejercicios que contiene la rutina
-	Tiempo        int    `csv:"Tiempo"`        //Tiempo total en segundos
-	Calorias      int    `csv:"Calorias"`      //Calorías quemadas en total
-	Dificultad    string `csv:"Dificultad"`    //Dificultad de la rutina
-	Tipos         string `csv:"Tipos"`         //Tipo de rutina
-	PuntosPorTipo int    `csv:"PuntosPorTipo"` //Puntos totales por tipo
+	Nombre        					string 					`csv:"Nombre"`							//Nombre de la rutina
+	ListaDeEjercicios 				string 					`csv:"ListaDeEjercicios"`				//Ejercicios que contiene la rutina
+	TiempoEnMinutos        			int    					`csv:"TiempoEnMinutos"`					//Tiempo total en segundos
+	Calorias      					int    					`csv:"Calorias"`						//Calorías quemadas en total
+	Dificultad    					string 					`csv:"Dificultad"`						//Dificultad de la rutina
+	Tipos         					string 					`csv:"Tipos"`							//Tipo de rutina
+	Puntos 							int    					`csv:"Puntos"`							//Puntos totales por tipo
+	CaracteristicasIndividuales    	[]ejercicio.Ejercicio	`csv:"CaracteristicasIndividuales"`		//Caracteristicas individuales de cada ejercicio
 }
 
 // GestorRutinas es una estructura para gestionar las rutinas.
-//
-// Funcionamiento:
-//
-//	Se define el campo 'rutinas' como puntero a una lista doblemente enlazada de punteros a 'Rutina'
-//	Se define el campo 'gestorEjercicios' como puntero a una instancia de 'GestorEjercicios' del paquete 'ejercicio'
 type GestorRutinas struct {
 	rutinas          *list.DoubleLinkedList[*Rutina]
 	gestorEjercicios *ejercicio.GestorEjercicios
@@ -45,13 +34,6 @@ type GestorRutinas struct {
 //
 // Retorna:
 //   - Un puntero a un nuevo GestorRutinas inicializado.
-//
-// Funcionamiento:
-//
-//	Se retorna una nueva instancia de 'GestorRutinas' con su dirección de memoria, creando un nuevo puntero {
-//	    Inicializa 'rutinas' con una lista doblemente enlazada
-//	    Inicializa 'gestorEjercicios' con el valor del parámetro 'gestorEj'
-//	}
 func NuevoGestorRutinas(gestorEj *ejercicio.GestorEjercicios) *GestorRutinas {
 	return &GestorRutinas{
 		rutinas:          list.NewDoubleLinkedList[*Rutina](),
@@ -67,24 +49,21 @@ func NuevoGestorRutinas(gestorEj *ejercicio.GestorEjercicios) *GestorRutinas {
 // Retorna:
 //   - Un nil si la rutina se agregó correctamente.
 //   - Un error si la rutina ya existe en la lista.
-//
-// Funcionamiento:
-//
-//	Se recorre la lista de rutinas {
-//	    Si el nombre de la rutina ya existe {
-//	        Se retorna un error
-//	    }
-//	}
-//	Si no se encuentra una rutina, se calculan las propiedades de 'gestorEjercicios'
-//	Se agrega la rutina al final de la lista
-//	Se retorna nil
 func (g *GestorRutinas) AgregarRutina(rutina *Rutina) error {
-	for node := g.rutinas.Head(); node != nil; node = node.Next() {
-		if node.Data().Nombre == rutina.Nombre {
+	for nodo := g.rutinas.Head(); nodo != nil; nodo = nodo.Next() {
+		if nodo.Data().Nombre == rutina.Nombre {
 			return errors.New("la rutina ya existe")
 		}
 	}
-	rutina.CalcularPropiedades(g.gestorEjercicios)
+	err := rutina.CalcularPropiedades(g.gestorEjercicios)
+	if err != nil {
+		return err
+	}
+	var nombresEjercicios []string
+	for _, ejercicio := range rutina.CaracteristicasIndividuales {
+		nombresEjercicios = append(nombresEjercicios, ejercicio.Nombre)
+	}
+	rutina.ListaDeEjercicios = "\"" + strings.Join(nombresEjercicios, "\", \"") + "\""
 	g.rutinas.Append(rutina)
 	return nil
 }
@@ -97,24 +76,31 @@ func (g *GestorRutinas) AgregarRutina(rutina *Rutina) error {
 // Retorna:
 //   - Un nil en caso de que se haya elimiado la rutina.
 //   - Un error en caso de que no se encuentre en la lista.
-//
-// Funcionamiento:
-//
-//	Se recorre la lista de rutinas {
-//	    Si el nombre de la rutina es el nombre buscado {
-//	        Se elimina el nodo que contiene la rutina de la lista
-//	        Se retorna nil
-//	    }
-//	}
-//	Si no se encuentra la rutina, se retorna un error
 func (g *GestorRutinas) EliminarRutina(nombre string) error {
-	for node := g.rutinas.Head(); node != nil; node = node.Next() {
-		if node.Data().Nombre == nombre {
-			g.rutinas.Remove(node.Data())
+	for nodo := g.rutinas.Head(); nodo != nil; nodo = nodo.Next() {
+		if nodo.Data().Nombre == nombre {
+			g.rutinas.Remove(nodo.Data())
 			return nil
 		}
 	}
 	return errors.New("rutina no encontrada")
+}
+
+// ConsultarRutina devuelve los datos de la rutina buscando por su nombre.
+//
+// Parámetros:
+//   - 'nombre' será el nombre de la rutina a buscar.
+//
+// Retorna:
+//   - Un puntero a la rutina si se encuentra.
+//   - Un error si la rutina no se encuentra.
+func (g *GestorRutinas) ConsultarRutina(nombre string) (*Rutina, error) {
+	for nodo := g.rutinas.Head(); nodo != nil; nodo = nodo.Next() {
+		if nodo.Data().Nombre == nombre {
+			return nodo.Data(), nil
+		}
+	}
+	return nil, errors.New("rutina no encontrada")
 }
 
 // ModificarRutina busca una rutina por su nombre y reemplaza sus datos con los de una nueva rutina.
@@ -126,22 +112,11 @@ func (g *GestorRutinas) EliminarRutina(nombre string) error {
 // Retorna:
 //   - Un nil si se modifica la rutina correctamente.
 //   - Un error si la rutina no se encuentra en la lista.
-//
-// Funcionamiento:
-//
-//	Se recorre la lista de rutinas {
-//	    Si el nombre de la rutina es el nombre buscado {
-//	        Se calculan las propiedades de la nueva rutina pasando el gestorEjercicios como argumento
-//	        Se actualizan los datos del nodo con nuevaRutina
-//	        Se retorna nil
-//	    }
-//	}
-//	Si no se encuentra la rutina, se retorna un error
 func (g *GestorRutinas) ModificarRutina(nombre string, nuevaRutina *Rutina) error {
-	for node := g.rutinas.Head(); node != nil; node = node.Next() {
-		if node.Data().Nombre == nombre {
+	for nodo := g.rutinas.Head(); nodo != nil; nodo = nodo.Next() {
+		if nodo.Data().Nombre == nombre {
 			nuevaRutina.CalcularPropiedades(g.gestorEjercicios)
-			node.SetData(nuevaRutina)
+			nodo.SetData(nuevaRutina)
 			return nil
 		}
 	}
@@ -152,46 +127,12 @@ func (g *GestorRutinas) ModificarRutina(nombre string, nuevaRutina *Rutina) erro
 //
 // Retorna:
 //   - Un slice de punteros a Rutina que contiene todas las rutinas almacenadas.
-//
-// Funcionamiento:
-//
-//	Se declara la variable 'resultado' de tipo slice de punteros a Rutina (vacío)
-//	Se recorre la lista de rutinas {
-//	    Se agrega la rutina del nodo actual al slice 'resultado'
-//	}
-//	Se retorna 'resultado'
-func (g *GestorRutinas) ObtenerTodasLasRutinas() []*Rutina {
+func (g *GestorRutinas) ListarRutinas() []*Rutina {
 	resultado := []*Rutina{}
-	for node := g.rutinas.Head(); node != nil; node = node.Next() {
-		resultado = append(resultado, node.Data())
+	for nodo := g.rutinas.Head(); nodo != nil; nodo = nodo.Next() {
+		resultado = append(resultado, nodo.Data())
 	}
 	return resultado
-}
-
-// ConsultarRutina devuelve los datos de la rutina buscando por su nombre.
-//
-// Parámetros:
-//   - 'nombre' será el nombre de la rutina a buscar.
-//
-// Retorna:
-//   - Un puntero a la rutina si se encuentra.
-//   - Un error si la rutina no se encuentra.
-//
-// Funcionamiento:
-//
-//	Se recorre la lista de rutinas {
-//	    Si el nombre de la rutina es el nombre buscado {
-//	        Se retornan los datos del nodo (la rutina) y un nil
-//	    }
-//	}
-//	Si no se encuentra la rutina, se retorna un nil y un error
-func (g *GestorRutinas) ConsultarRutina(nombre string) (*Rutina, error) {
-	for node := g.rutinas.Head(); node != nil; node = node.Next() {
-		if node.Data().Nombre == nombre {
-			return node.Data(), nil
-		}
-	}
-	return nil, errors.New("rutina no encontrada")
 }
 
 // ListarRutinas devuelve una lista de rutinas que coinciden con una dificultad específica.
@@ -201,76 +142,49 @@ func (g *GestorRutinas) ConsultarRutina(nombre string) (*Rutina, error) {
 //
 // Retorna:
 //   - Un slice de punteros a Rutina que coinciden con la dificultad especificada.
-//
-// Funcionamiento:
-//
-//	Se declara la variable 'resultado' de tipo slice de punteros a Rutina (vacío)
-//	Se recorre la lista de rutinas {
-//	    Si la dificultad de la rutina es la dificultad buscada {
-//	        Se agrega la rutina del nodo actual al slice 'resultado'
-//	    }
-//	}
-//	Se retorna 'resultado'
-func (g *GestorRutinas) ListarRutinas(dificultad string) []*Rutina {
+func (g *GestorRutinas) ListarRutinasPorDificultad(dificultad string) []*Rutina {
 	resultado := []*Rutina{}
-	for node := g.rutinas.Head(); node != nil; node = node.Next() {
-		if node.Data().Dificultad == dificultad {
-			resultado = append(resultado, node.Data())
+	for nodo := g.rutinas.Head(); nodo != nil; nodo = nodo.Next() {
+		if nodo.Data().Dificultad == dificultad {
+			resultado = append(resultado, nodo.Data())
 		}
 	}
 	return resultado
 }
 
+//Métodos que no van al menú sino que se llaman desde otros métodos
+
 // CalcularPropiedades calcula y actualiza las propiedades de una rutina basadas en los ejercicios disponibles.
 //
 // Parámetros:
 //   - 'gestor' como puntero al gestorEjercicios que proporciona acceso a los ejercicios disponibles.
-//
-// Funcionamiento:
-//
-//	Se declara la variable 'ejercicios' de tipo slice de punteros de Ejercicio, que contiene el resultado del método 'ObtenerTodosLosEjercicios' de gestor
-//	Se declaran las variables 'totalTiempo', 'totalCalorias' y 'totalPuntos' de tipo int para acumular tiempo, calorías y puntos totales de los ejercicios
-//	Se declara la variable 'nombresEjercicios' de tipo slice de string (vacío)
-//	Se declara la variable 'tiposSet' de tipo map para almacenar los tipos únicos de ejercicios
-//	Se declara la variable 'dificultades' de tipo mal para contar la frecuencia de cada nivel de dificultad
-//	Se recorre la lista de ejercicios {
-//	    Se suma el tiempo del ejercicio actual a 'totalTiempo'
-//	    Se suma las calorías del ejercicio actual a 'totalCalorias'
-//	    Se suma los puntos del ejercicio actual a 'totalPuntos'
-//	    Se añade el nombre del ejercicio actual al slice 'nombresEjercicios'
-//	    Se marca el tipo del ejercicio actual como presente en el map 'tiposSet'
-//	    Se incrementa el conteo de la dificultad del ejercicio actual en el map 'dificultades'
-//	}
-//	Se asigna el tiempo acumulado de 'totalTiempo' a la rutina
-//	Se asigna las calorías acumuladas de 'totalCalorias' a la rutina
-//	Se combina los nombres de los ejercicios
-//	Se combina los tipos de los ejercicios
-//	Se asigna los puntos totales de 'totalPuntos' a la rutina
-//	Si la dificultad de la rutina es una cadena vacía {
-//	    Se asigna el nivel de dificultad más frecuente del map 'dificultades'
-//	}
-func (r *Rutina) CalcularPropiedades(gestor *ejercicio.GestorEjercicios) {
-    ejercicios := gestor.ObtenerTodosLosEjercicios()
-    var totalTiempo, totalCalorias, totalPuntos int
-    nombresEjercicios := make([]string, 0)
-    tiposSet := make(map[string]bool)
-    dificultades := make(map[string]int)
-    for _, ejercicio := range ejercicios {
-        totalTiempo += ejercicio.Tiempo
-        totalCalorias += ejercicio.Calorias
-        totalPuntos += ejercicio.Puntos
-        nombresEjercicios = append(nombresEjercicios, ejercicio.Nombre)
-        tiposSet[ejercicio.Tipo] = true
-        dificultades[ejercicio.Dificultad]++
-    }
-    r.Tiempo = totalTiempo
-    r.Calorias = totalCalorias
-    r.Ejercicios = unirKeys(nombresEjercicios, ", ")
-    r.Tipos = unirKeys(mapKeysAStringSlice(tiposSet), ", ")
-    r.PuntosPorTipo = totalPuntos
-    if r.Dificultad == "" {
-        r.Dificultad = keyMaxima(dificultades)
-    }
+func (r *Rutina) CalcularPropiedades(gestor *ejercicio.GestorEjercicios) error {
+	var nombresEjercicios []string
+	for _, ejercicio := range r.CaracteristicasIndividuales {
+		nombresEjercicios = append(nombresEjercicios, ejercicio.Nombre)
+	}
+	ejercicios := gestor.ObtenerEjercicioPorNombre(nombresEjercicios)
+	if len(ejercicios) == 0 {
+		return errors.New("no se encontraron ejercicios válidos para esta rutina")
+	}
+	var totalTiempoEnSegundos, totalCalorias, totalPuntos int
+	tiposSet := make(map[string]bool)
+	dificultades := make(map[string]int)
+	for _, ejercicio := range ejercicios {
+		totalTiempoEnSegundos += ejercicio.TiempoEnSegundos
+		totalCalorias += ejercicio.Calorias
+		totalPuntos += ejercicio.Puntos
+		tiposSet[ejercicio.Tipo] = true
+		dificultades[ejercicio.Dificultad]++
+	}
+	r.TiempoEnMinutos = totalTiempoEnSegundos / 60
+	r.Calorias = totalCalorias
+	r.Tipos = unirKeys(mapKeysAStringSlice(tiposSet), ", ")
+	r.Puntos = totalPuntos
+	if r.Dificultad == "" {
+		r.Dificultad = keyMaxima(dificultades)
+	}
+	return nil
 }
 
 // unirKeys une una lista de cadenas usando un separador dado.
@@ -280,16 +194,6 @@ func (r *Rutina) CalcularPropiedades(gestor *ejercicio.GestorEjercicios) {
 //   - 'separador' como un string que se usará como separador entre los elementos.
 // Retorna:
 //   - Un string que contiene todos los elementos del slice unidos por el separador especificado.
-// Funcionamiento:
-//
-//	Se declara la variable 'resultado' de tipo string vacío
-//	Se recorren los elementos de 'elemento' con 'indice' como índice del elemento actual {
-//	    Si 'indice' no es el primer elemento  de 'elementos' {
-//	        Se agrega el separador al resultado
-//	    }
-//	    Si no, se agrega el elemento actual de 'elemento' a 'resultado'
-//	}
-//	Se retorna 'resultado'
 func unirKeys(elementos []string, separador string) string {
 	resultado := ""
 	for indice, elemento := range elementos {
@@ -308,14 +212,6 @@ func unirKeys(elementos []string, separador string) string {
 //
 // Retorna:
 //   - Un slice de String que contiene todas las claves del mapa.
-//
-// Funcionamiento:
-//
-//	Se declara la variable 'claves' de tipo slice de String con longitud inicial de 0 y capacidad igual a la longitud de 'mapa'
-//	Se recorre cada clave del map 'mapa' {
-//	    Se agrega la clave actual al slice 'claves'
-//	}
-//	Se retorna 'claves'
 func mapKeysAStringSlice(mapa map[string]bool) []string {
 	claves := make([]string, 0, len(mapa))
 	for clave := range mapa {
@@ -331,18 +227,6 @@ func mapKeysAStringSlice(mapa map[string]bool) []string {
 //
 // Retorna:
 //   - Un String que es la clave con el valor máximo en el mapa.
-//
-// Funcionamiento:
-//
-//	Se declara la variable 'recuentoMaximo' de tipo int con un valor de -1
-//	Se declara la variable 'claveMaxima' de tipo String vacío
-//	Se recorre cada par clave-valor del map 'mapa' {
-//	    Si el valor 'cuenta' es mayor al valor 'recuentoMaximo' {
-//	        Se actualiza 'recuentoMaximo' al valor de 'cuenta'
-//	        Se actualiza 'claveMaxima' al valor de 'clave'
-//	    }
-//	}
-//	Se retorna 'claveMaxima'
 func keyMaxima(mapa map[string]int) string {
 	recuentoMaximo := -1
 	claveMaxima := ""

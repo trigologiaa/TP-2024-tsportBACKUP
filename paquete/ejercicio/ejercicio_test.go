@@ -4,27 +4,12 @@ import (
     "testing"
 )
 
-//  TestAgregarEjercicio verifica la funcionalidad de AgregarEjercicio. Comprueba que se puede agregar un ejercicio correctamente y que no se pueden agregar duplicados.
-//
-//  Funcionamiento:
-//      Se declara la variable 'gestor' que es el llamado a la función 'NuevoGestorEjercicios' que crea una nueva instancia de 'GestorEjercicios'
-//      Se declara la variable 'ejercicio' que es una nueva instancia de 'Ejercicio' {
-//          Se inicializa el campo Nombre
-//          Se inicializa el campo Tiempo
-//          Se inicializa el campo Calorias
-//      }
-//      Si se produce un problema al agregar el ejercicio {
-//          Se genera un error
-//      }
-//      Si se produce un problema al agregar el ejercicio por estar duplicado {
-//          Se genera un error
-//      }
 func TestAgregarEjercicio(t *testing.T) {
     gestor := NuevoGestorEjercicios()
-    ejercicio := &Ejercicio {
-        Nombre: "Sentadillas",
-        Tiempo: 60,
-        Calorias: 100,
+    ejercicio := &Ejercicio{
+        Nombre:            "Sentadillas",
+        TiempoEnSegundos: 60,
+        Calorias:          100,
     }
     if err := gestor.AgregarEjercicio(ejercicio); err != nil {
         t.Errorf("Error al agregar ejercicio: %v", err)
@@ -34,60 +19,27 @@ func TestAgregarEjercicio(t *testing.T) {
     }
 }
 
-//  TestObtenerTodosLosEjercicios verifica la funcionalidad de ObtenerTodosLosEjercicios. 
-//  Comprueba que se pueden obtener todos los ejercicios agregados correctamente.
-//
-//  Funcionamiento:
-//      Se declara la variable 'gestor' que es el llamado a la función 'NuevoGestorEjercicios' que crea una nueva instancia de 'GestorEjercicios'
-//      Se declara la variable 'ejercicio1' que es una nueva instancia de 'Ejercicio' {
-//          Se inicializa el campo Nombre
-//          Se inicializa el campo Tiempo
-//          Se inicializa el campo Calorias
-//          Se inicializa el campo Tipo
-//          Se inicializa el campo Puntos
-//          Se inicializa el campo Dificultad
-//      }
-//      Se declara la variable 'ejercicio2' que es una nueva instancia de 'Ejercicio' {
-//          Se inicializa el campo Nombre
-//          Se inicializa el campo Tiempo
-//          Se inicializa el campo Calorias
-//          Se inicializa el campo Tipo
-//          Se inicializa el campo Puntos
-//          Se inicializa el campo Dificultad
-//      }
-//      Se agrega 'ejercicio1' a 'gestor' llamando al método 'AgregarEjercicio'
-//      Se agrega 'ejercicio2' a 'gestor' llamando al método 'AgregarEjercicio'
-//      Se llama al método 'ObtenerTodosLosEjercicios' que devuelve un slice de punteros a Ejercicio, asignado a 'ejercicios'
-//      Si la cantidad de ejercicios no es la esperada {
-//          Se genera un error
-//      }
-//      Si el nombre del primer ejercicio no es el esperado {
-//          Se genera un error
-//      }
-//      Si el nombre del segundo ejercicio no es el esperado {
-//          Se genera un error
-//      }
-func TestObtenerTodosLosEjercicios(t *testing.T) {
+func TestListarEjercicios(t *testing.T) {
     gestor := NuevoGestorEjercicios()
     ejercicio1 := &Ejercicio{
-        Nombre: "Sentadillas",
-        Tiempo: 60,
-        Calorias: 100,
-        Tipo: "Fuerza",
-        Puntos: 10,
-        Dificultad: "Media",
+        Nombre:            "Sentadillas",
+        TiempoEnSegundos: 60,
+        Calorias:          100,
+        Tipo:              "Fuerza",
+        Puntos:            10,
+        Dificultad:        "Media",
     }
     ejercicio2 := &Ejercicio{
-        Nombre: "Flexiones",
-        Tiempo: 45,
-        Calorias: 80,
-        Tipo: "Fuerza",
-        Puntos: 8,
-        Dificultad: "Alta",
+        Nombre:            "Flexiones",
+        TiempoEnSegundos: 45,
+        Calorias:          80,
+        Tipo:              "Fuerza",
+        Puntos:            8,
+        Dificultad:        "Alta",
     }
     gestor.AgregarEjercicio(ejercicio1)
     gestor.AgregarEjercicio(ejercicio2)
-    ejercicios := gestor.ObtenerTodosLosEjercicios()
+    ejercicios := gestor.ListarEjercicios()
     if len(ejercicios) != 2 {
         t.Errorf("Se esperaban 2 ejercicios, pero se obtuvieron %d", len(ejercicios))
     }
@@ -99,23 +51,9 @@ func TestObtenerTodosLosEjercicios(t *testing.T) {
     }
 }
 
-//  TestEliminarEjercicio verifica la funcionalidad de EliminarEjercicio. Comprueba que se puede eliminar un ejercicio correctamente y que un ejercicio eliminado no puede ser consultado.
-//
-//  Funcionamiento:
-//      Se declara la variable 'gestor' que es el llamado a la función 'NuevoGestorEjercicios' que crea una nueva instancia de 'GestorEjercicios'
-//      Se declara la variable 'ejercicio' que es una nueva instancia de 'Ejercicio' {
-//          Se inicializa el campo Nombre
-//      }
-//      Se agrega el ejercicio a 'gestor' llamando al método 'AgregarEjercicio'
-//      Si se produce un problema al eliminar el ejercicio {
-//          Se genera un error
-//      }
-//      Si se produce un problema al consultar un ejercicio eliminado {
-//          Se genera un error
-//      }
 func TestEliminarEjercicio(t *testing.T) {
     gestor := NuevoGestorEjercicios()
-    ejercicio := &Ejercicio {
+    ejercicio := &Ejercicio{
         Nombre: "Burpees",
     }
     gestor.AgregarEjercicio(ejercicio)
@@ -127,27 +65,11 @@ func TestEliminarEjercicio(t *testing.T) {
     }
 }
 
-//  TestConsultarEjercicio verifica la funcionalidad de ConsultarEjercicio. Asegura que se puede consultar un ejercicio correctamente y que los datos devueltos son correctos.
-//
-//  Funcionamiento:
-//      Se declara la variable 'gestor' que es el llamado a la función 'NuevoGestorEjercicios' que crea una nueva instancia de 'GestorEjercicios'
-//      Se declara la variable 'ejercicio' que es una nueva instancia de 'Ejercicio' {
-//          Se inicializa el campo Nombre
-//          Se inicializa el campo Tiempo
-//      }
-//      Se agrega el ejercicio a 'gestor' llamando al método 'AgregarEjercicio'
-//      Se llama al método 'ConsultarEjercicio' con el campo Nombre como parámetro, devolviendo un puntero a Ejercicio asignado a 'resultado' y un error asignado a 'err'
-//      Si se produce un problema al consultar el ejercicio {
-//          Se genera un error
-//      }
-//      Si se produce un problema al verificar el Nombre del ejercicio {
-//          Se genera un error
-//      }
 func TestConsultarEjercicio(t *testing.T) {
     gestor := NuevoGestorEjercicios()
-    ejercicio := &Ejercicio {
-        Nombre: "Plancha", 
-        Tiempo: 30,
+    ejercicio := &Ejercicio{
+        Nombre:            "Plancha",
+        TiempoEnSegundos: 30,
     }
     gestor.AgregarEjercicio(ejercicio)
     resultado, err := gestor.ConsultarEjercicio("Plancha")
@@ -156,5 +78,158 @@ func TestConsultarEjercicio(t *testing.T) {
     }
     if resultado.Nombre != "Plancha" {
         t.Errorf("El nombre del ejercicio esperado era 'Plancha', se obtuvo: %s", resultado.Nombre)
+    }
+}
+
+func TestModificarEjercicio(t *testing.T) {
+    gestor := NuevoGestorEjercicios()
+    ejercicio := &Ejercicio{
+        Nombre:            "Sentadillas",
+        TiempoEnSegundos: 60,
+        Calorias:          100,
+    }
+    gestor.AgregarEjercicio(ejercicio)
+    nuevoEjercicio := &Ejercicio{
+        Nombre:            "Sentadillas",
+        TiempoEnSegundos: 45,
+        Calorias:          150,
+    }
+    if err := gestor.ModificarEjercicio("Sentadillas", nuevoEjercicio); err != nil {
+        t.Errorf("Error al modificar el ejercicio: %v", err)
+    }
+    ejercicios := gestor.ListarEjercicios()
+    if len(ejercicios) != 1 {
+        t.Errorf("Se esperaba 1 ejercicio después de la modificación, pero se obtuvieron %d", len(ejercicios))
+    }
+    if ejercicios[0].Nombre != "Sentadillas" || ejercicios[0].TiempoEnSegundos != 45 || ejercicios[0].Calorias != 150 {
+        t.Errorf("El ejercicio no se modificó correctamente. Se esperaba Nombre='Sentadillas', TiempoEnSegundos=45, Calorias=150, pero se obtuvo Nombre='%s', TiempoEnSegundos=%d, Calorias=%d", ejercicios[0].Nombre, ejercicios[0].TiempoEnSegundos, ejercicios[0].Calorias)
+    }
+}
+
+func TestObtenerEjercicioPorNombre(t *testing.T) {
+    gestor := NuevoGestorEjercicios()
+    ejercicio1 := &Ejercicio{
+        Nombre:            "Sentadillas",
+        TiempoEnSegundos: 60,
+    }
+    ejercicio2 := &Ejercicio{
+        Nombre:            "Flexiones",
+        TiempoEnSegundos: 45,
+    }
+    gestor.AgregarEjercicio(ejercicio1)
+    gestor.AgregarEjercicio(ejercicio2)
+    nombres := []string{"Sentadillas", "Flexiones", "Plancha"}
+    ejercicios := gestor.ObtenerEjercicioPorNombre(nombres)
+    if len(ejercicios) != 2 {
+        t.Errorf("Se esperaban 2 ejercicios, pero se obtuvieron %d", len(ejercicios))
+    }
+}
+
+func TestFiltrarPorTiposYDificultad(t *testing.T) {
+    gestor := NuevoGestorEjercicios()
+    ejercicio1 := &Ejercicio{
+        Nombre:            "Sentadillas",
+        TiempoEnSegundos: 60,
+        Tipo:              "Fuerza",
+        Dificultad:        "Media",
+    }
+    ejercicio2 := &Ejercicio{
+        Nombre:            "Flexiones",
+        TiempoEnSegundos: 45,
+        Tipo:              "Fuerza",
+        Dificultad:        "Alta",
+    }
+    ejercicio3 := &Ejercicio{
+        Nombre:            "Carrera",
+        TiempoEnSegundos: 300,
+        Tipo:              "Cardio",
+        Dificultad:        "Alta",
+    }
+    gestor.AgregarEjercicio(ejercicio1)
+    gestor.AgregarEjercicio(ejercicio2)
+    gestor.AgregarEjercicio(ejercicio3)
+    ejerciciosFiltrados := gestor.FiltrarPorTiposYDificultad([]string{"Fuerza"}, "Alta")
+    if len(ejerciciosFiltrados) != 1 {
+        t.Errorf("Se esperaba 1 ejercicio filtrado, pero se obtuvieron %d", len(ejerciciosFiltrados))
+    }
+}
+
+func TestOrdenarTiempoMenorAMayor(t *testing.T) {
+    gestor := NuevoGestorEjercicios()
+    ejercicio1 := &Ejercicio{
+        Nombre:            "Sentadillas",
+        TiempoEnSegundos: 60,
+    }
+    ejercicio2 := &Ejercicio{
+        Nombre:            "Flexiones",
+        TiempoEnSegundos: 45,
+    }
+    ejercicio3 := &Ejercicio{
+        Nombre:            "Plancha",
+        TiempoEnSegundos: 30,
+    }
+    gestor.AgregarEjercicio(ejercicio1)
+    gestor.AgregarEjercicio(ejercicio2)
+    gestor.AgregarEjercicio(ejercicio3)
+    ejercicios := gestor.ListarEjercicios()
+    ejerciciosOrdenados := gestor.OrdenarTiempoMenorAMayor(ejercicios)
+    if ejerciciosOrdenados[0].Nombre != "Plancha" {
+        t.Errorf("Se esperaba el ejercicio 'Plancha' como el primero en la lista ordenada, pero se obtuvo '%s'", ejerciciosOrdenados[0].Nombre)
+    }
+}
+
+func TestFiltrarPorTipoPuntosYDuracionMaxima(t *testing.T) {
+    gestor := NuevoGestorEjercicios()
+    ejercicio1 := &Ejercicio{
+        Nombre:            "Sentadillas",
+        TiempoEnSegundos: 60,
+        Tipo:              "Fuerza",
+        Puntos:            10,
+    }
+    ejercicio2 := &Ejercicio{
+        Nombre:            "Flexiones",
+        TiempoEnSegundos: 45,
+        Tipo:              "Fuerza",
+        Puntos:            8,
+    }
+    ejercicio3 := &Ejercicio{
+        Nombre:            "Carrera",
+        TiempoEnSegundos: 300,
+        Tipo:              "Cardio",
+        Puntos:            12,
+    }
+    gestor.AgregarEjercicio(ejercicio1)
+    gestor.AgregarEjercicio(ejercicio2)
+    gestor.AgregarEjercicio(ejercicio3)
+    ejerciciosFiltrados := gestor.FiltrarPorTipoPuntosYDuracionMaxima("Fuerza", 1)
+    if len(ejerciciosFiltrados) != 2 {
+        t.Errorf("Se esperaban 2 ejercicios filtrados, pero se obtuvieron %d", len(ejerciciosFiltrados))
+    }
+}
+
+func TestOrdenarPorPuntajeDescendente(t *testing.T) {
+    gestor := NuevoGestorEjercicios()
+    ejercicio1 := &Ejercicio{
+        Nombre:            "Sentadillas",
+        TiempoEnSegundos: 60,
+        Puntos:            10,
+    }
+    ejercicio2 := &Ejercicio{
+        Nombre:            "Flexiones",
+        TiempoEnSegundos: 45,
+        Puntos:            8,
+    }
+    ejercicio3 := &Ejercicio{
+        Nombre:            "Carrera",
+        TiempoEnSegundos: 300,
+        Puntos:            12,
+    }
+    gestor.AgregarEjercicio(ejercicio1)
+    gestor.AgregarEjercicio(ejercicio2)
+    gestor.AgregarEjercicio(ejercicio3)
+    ejercicios := gestor.ListarEjercicios()
+    ejerciciosOrdenados := gestor.OrdenarPorPuntajeDescendente(ejercicios)
+    if ejerciciosOrdenados[0].Nombre != "Carrera" {
+        t.Errorf("Se esperaba el ejercicio 'Carrera' como el primero en la lista ordenada, pero se obtuvo '%s'", ejerciciosOrdenados[0].Nombre)
     }
 }
