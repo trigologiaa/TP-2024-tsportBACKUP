@@ -9,7 +9,7 @@ import (
 	"github.com/gocarina/gocsv"
 )
 
-// init genera una inicialización con configuraciones específicas para la escritura de CSV.
+
 func init() {
 	gocsv.SetCSVWriter(func(out io.Writer) *gocsv.SafeCSVWriter {
 		return gocsv.DefaultCSVWriter(out)
@@ -22,15 +22,15 @@ func init() {
 // GuardarEjercicios guarda una lista de ejercicios en un archivo CSV.
 //
 // Parámetros:
-//   - 'ejercicios' será un slice de punteros a la estructura 'Ejercicio'.
-//   - 'nombreDeArchivo' será un String con la ruta del archivo donde se guardarán los ejercicios.
+//   - ejercicios: slice de punteros a la estructura Ejercicio que se guardará en el archivo.
+//   - nombreDeArchivo: ruta del archivo donde se guardarán los ejercicios.
 //
 // Retorna:
-//      - Un error en caso de que ocurra un problema al abrir o escribir en el archivo.
-//      - El método 'MarshalFile' en caso de que se haya ejecutado correctamente.
+//   - Un error en caso de problemas al abrir o escribir en el archivo.
+//   - El método MarshalFile en caso de ejecución correcta.
 func GuardarEjercicios(ejercicios []*ejercicio.Ejercicio, nombreDeArchivo string) error {
 	rutaCompleta := filepath.Join("/home/lauty/Documents/AYP2/TP-2024-tsportBACKUP/informacion", nombreDeArchivo)
-	archivo, err := os.OpenFile(rutaCompleta, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
+	archivo, err := os.OpenFile(rutaCompleta, os.O_RDWR | os.O_CREATE | os.O_TRUNC, 0644)
 	if err != nil {
 		return err
 	}
@@ -41,11 +41,11 @@ func GuardarEjercicios(ejercicios []*ejercicio.Ejercicio, nombreDeArchivo string
 // CargarEjercicios carga una lista de ejercicios desde un archivo CSV.
 //
 // Parámetros:
-//   - 'nombreDeArchivo' será un String con la ruta del archivo desde donde se cargarán los ejercicios.
+//   - nombreDeArchivo: ruta del archivo desde donde se cargarán los ejercicios.
 //
 // Retorna:
-//      - Un slice de punteros a la estructura 'Ejercicio'.
-//      - Un error en caso de que ocurra un problema al abrir o leer el archivo.
+//   - Un slice de punteros a Ejercicio.
+//   - Un error si hay problemas al abrir o leer el archivo.
 func CargarEjercicios(nombreDeArchivo string) ([]*ejercicio.Ejercicio, error) {
     archivo, err := os.Open(filepath.Join("D:/UNTREF/AlgoritmosyProgramaciónII/TP-2024-tsport/informacion", nombreDeArchivo))
     if err != nil {
@@ -59,6 +59,11 @@ func CargarEjercicios(nombreDeArchivo string) ([]*ejercicio.Ejercicio, error) {
     return ejercicios, nil
 }
 
+// CargarEjerciciosDeUna carga una lista de ejercicios desde un archivo CSV.
+//
+// Retorna:
+//   - Un slice de punteros a Ejercicio.
+//   - Un error si hay problemas al abrir o leer el archivo.
 func CargarEjerciciosDeUna() ([]*ejercicio.Ejercicio, error) {
 	nombreDeArchivo := "ejercicios.csv"
 	archivo, err := os.Open(filepath.Join("D:/UNTREF/AlgoritmosyProgramaciónII/TP-2024-tsport/informacion", nombreDeArchivo))
@@ -76,21 +81,21 @@ func CargarEjerciciosDeUna() ([]*ejercicio.Ejercicio, error) {
 // GuardarRutinas guarda una lista de rutinas en un archivo CSV.
 //
 // Parámetros:
-//   - 'rutinas' será un slice de punteros a la estructura 'Rutina'.
-//   - 'gestor' será un puntero a 'GestorEjercicios', usado para calcular las propiedades de las rutinas.
-//   - 'nombreDeArchivo' será un String con la ruta del archivo donde se guardarán las rutinas.
+//   - rutinas: slice de punteros a la estructura Rutina que se guardará en el archivo.
+//   - gestorDeEjercicios: puntero a GestorDeEjercicios usado para calcular las propiedades de las rutinas.
+//   - nombreDeArchivo: ruta del archivo donde se guardarán las rutinas.
 //
 // Retorna:
-//      - Un error en caso de que ocurra un problema al abrir o escribir en el archivo.
-func GuardarRutinas(rutinas []*rutina.Rutina, gestor *ejercicio.GestorEjercicios, nombreDeArchivo string) error {
+//   - Un error en caso de problemas al abrir o escribir en el archivo.
+func GuardarRutinas(rutinas []*rutina.Rutina, gestorDeEjercicios *ejercicio.GestorDeEjercicios, nombreDeArchivo string) error {
     rutaCompleta := filepath.Join("D:/UNTREF/AlgoritmosyProgramaciónII/TP-2024-tsport/informacion", nombreDeArchivo)
-    archivo, err := os.OpenFile(rutaCompleta, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
+    archivo, err := os.OpenFile(rutaCompleta, os.O_RDWR | os.O_CREATE | os.O_TRUNC, 0644)
     if err != nil {
         return err
     }
     defer archivo.Close()
     for _, rutina := range rutinas {
-        rutina.CalcularPropiedades(gestor)
+        rutina.CalcularPropiedades(gestorDeEjercicios)
     }
     return gocsv.MarshalFile(&rutinas, archivo)
 }
@@ -98,11 +103,11 @@ func GuardarRutinas(rutinas []*rutina.Rutina, gestor *ejercicio.GestorEjercicios
 // CargarRutinas carga una lista de rutinas desde un archivo CSV.
 //
 // Parámetros:
-//   - 'nombreDeArchivo' será una cadena con la ruta del archivo desde donde se cargarán las rutinas.
+//   - nombreDeArchivo: ruta del archivo desde donde se cargarán las rutinas.
 //
 // Retorna:
-//      - Un slice de punteros a la estructura 'Rutina'.
-//      - Un error en caso de que ocurra un problema al abrir o leer el archivo.
+//   - Un slice de punteros a Rutina.
+//   - Un error si hay problemas al abrir o leer el archivo.
 func CargarRutinas(nombreDeArchivo string) ([]*rutina.Rutina, error) {
 	archivo, err := os.Open(filepath.Join("/home/lauty/Documents/AYP2/TP-2024-tsportBACKUP/informacion", nombreDeArchivo))
 	if err != nil {
@@ -116,6 +121,11 @@ func CargarRutinas(nombreDeArchivo string) ([]*rutina.Rutina, error) {
 	return rutinas, nil
 }
 
+// CargarRutinasDeUna carga una lista de rutinas desde un archivo CSV.
+//
+// Retorna:
+//   - Un slice de punteros a Rutina.
+//   - Un error si hay problemas al abrir o leer el archivo.
 func CargarRutinasDeUna() ([]*rutina.Rutina, error) {
     nombreDeArchivo := "rutinas.csv"
     archivo, err := os.Open(filepath.Join("D:/UNTREF/AlgoritmosyProgramaciónII/TP-2024-tsport/informacion", nombreDeArchivo))

@@ -1,6 +1,5 @@
 package main
 
-//
 import (
 	"TP-2024-TSPORT/paquete/almacenamiento"
 	"TP-2024-TSPORT/paquete/ejercicio"
@@ -12,29 +11,29 @@ import (
 	"strings"
 )
 
+// main es la función principal del programa.
 func main() {
-	gestorEjercicios := ejercicio.NuevoGestorEjercicios()
+	gestorDeEjercicios := ejercicio.NuevoGestorDeEjercicios()
 	ejercicios, err := almacenamiento.CargarEjerciciosDeUna()
 	if err != nil {
 		fmt.Println("Error al iniciar lista de ejercicios:", err)
 	} else {
 		for _, ejercicio := range ejercicios {
-			gestorEjercicios.AgregarEjercicio(ejercicio)
+			gestorDeEjercicios.AgregarEjercicio(ejercicio)
 		}
 		fmt.Println("Lista de ejercicios iniciada correctamente.")
 	}
-	
-	gestorRutinas := rutina.NuevoGestorRutinas(gestorEjercicios)
+	gestorDeRutinas := rutina.NuevoGestorDeRutinas(gestorDeEjercicios)
 	rutinas, err := almacenamiento.CargarRutinasDeUna()
 	if err != nil {
 		fmt.Println("Error al iniciar lista de rutinas:", err)
 	} else {
 		for _, rutina := range rutinas {
-			gestorRutinas.AgregarRutina(rutina)
+			gestorDeRutinas.AgregarRutina(rutina)
 		}
 		fmt.Println("Lista de rutinas iniciada correctamente.")
 	}
-	scanner := bufio.NewScanner(os.Stdin)
+	escaner := bufio.NewScanner(os.Stdin)
 	for {
 		fmt.Println("\n--- Menú Principal ---")
 		fmt.Println("\n1. Gestionar Ejercicios")
@@ -42,17 +41,17 @@ func main() {
 		fmt.Println("3. Gestionar Archivos CSV")
 		fmt.Println("4. Salir")
 		fmt.Print("Seleccione una opción: ")
-		if !scanner.Scan() {
+		if !escaner.Scan() {
 			break
 		}
-		opcion := scanner.Text()
+		opcion := escaner.Text()
 		switch opcion {
 		case "1":
-			gestionarEjercicios(gestorEjercicios, scanner)
+			gestionarEjercicios(gestorDeEjercicios, escaner)
 		case "2":
-			gestionarRutinas(gestorEjercicios, gestorRutinas, scanner)
+			gestionarRutinas(gestorDeEjercicios, gestorDeRutinas, escaner)
 		case "3":
-			GestionarCSV(gestorEjercicios, gestorRutinas, scanner)
+			GestionarCSV(gestorDeEjercicios, gestorDeRutinas, escaner)
 		case "4":
 			fmt.Println("Saliendo...")
 			return
@@ -62,7 +61,12 @@ func main() {
 	}
 }
 
-func gestionarEjercicios(gestor *ejercicio.GestorEjercicios, scanner *bufio.Scanner) {
+// gestionarEjercicios maneja las operaciones relacionadas con la gestión de ejercicios.
+//
+// Parámetros:
+//   - gestorDeEjercicios: Puntero a GestorDeEjercicios, la estructura que maneja los ejercicios.
+//   - escaner: Puntero a bufio.Scanner, usado para leer la entrada del usuario.
+func gestionarEjercicios(gestorDeEjercicios *ejercicio.GestorDeEjercicios, escaner *bufio.Scanner) {
 	for {
 		fmt.Println("\n--- Gestión de Ejercicios ---")
 		fmt.Println("\n1. Agregar Ejercicio Nuevo")
@@ -72,43 +76,43 @@ func gestionarEjercicios(gestor *ejercicio.GestorEjercicios, scanner *bufio.Scan
 		fmt.Println("5. Listar todos los Ejercicios")
 		fmt.Println("6. Volver al Menú Principal")
 		fmt.Print("Seleccione una opción: ")
-		if !scanner.Scan() {
+		if !escaner.Scan() {
 			break
 		}
-		opcion := scanner.Text()
+		opcion := escaner.Text()
 		switch opcion {
 		case "1":
 			fmt.Print("Nombre del ejercicio: ")
-			scanner.Scan()
-			nombre := scanner.Text()
+			escaner.Scan()
+			nombre := escaner.Text()
 			fmt.Print("Descripción del ejercicio: ")
-			scanner.Scan()
-			descripcion := scanner.Text()
+			escaner.Scan()
+			descripcion := escaner.Text()
 			fmt.Print("Tiempo en segundos: ")
-			scanner.Scan()
-			tiempo, _ := strconv.Atoi(scanner.Text())
+			escaner.Scan()
+			tiempo, _ := strconv.Atoi(escaner.Text())
 			fmt.Print("Calorías quemadas: ")
-			scanner.Scan()
-			calorias, _ := strconv.Atoi(scanner.Text())
+			escaner.Scan()
+			calorias, _ := strconv.Atoi(escaner.Text())
 			fmt.Print("Tipo de ejercicio: ")
-			scanner.Scan()
-			tipo := scanner.Text()
+			escaner.Scan()
+			tipo := escaner.Text()
 			fmt.Print("Puntos por tipo de ejercicio: ")
-			scanner.Scan()
-			puntos, _ := strconv.Atoi(scanner.Text())
+			escaner.Scan()
+			puntos, _ := strconv.Atoi(escaner.Text())
 			fmt.Print("Dificultad del ejercicio: ")
-			scanner.Scan()
-			dificultad := scanner.Text()
-			ej := &ejercicio.Ejercicio{
-				Nombre:      nombre,
-				Descripcion: descripcion,
-				TiempoEnSegundos:      tiempo,
-				Calorias:    calorias,
-				Tipo:        tipo,
-				Puntos:      puntos,
-				Dificultad:  dificultad,
+			escaner.Scan()
+			dificultad := escaner.Text()
+			ejercicio := &ejercicio.Ejercicio {
+				NombreDeEjercicio:      		nombre,
+				DescripcionDeEjercicio: 		descripcion,
+				TiempoEnSegundosDeEjercicio:	tiempo,
+				CaloriasDeEjercicio:    		calorias,
+				TipoDeEjercicio:        		tipo,
+				PuntosPorTipoDeEjercicio:     	puntos,
+				DificultadDeEjercicio:  		dificultad,
 			}
-			err := gestor.AgregarEjercicio(ej)
+			err := gestorDeEjercicios.AgregarEjercicio(ejercicio)
 			if err != nil {
 				fmt.Println("Error al agregar el ejercicio:", err)
 			} else {
@@ -116,9 +120,9 @@ func gestionarEjercicios(gestor *ejercicio.GestorEjercicios, scanner *bufio.Scan
 			}
 		case "2":
 			fmt.Print("Nombre del ejercicio a eliminar: ")
-			scanner.Scan()
-			nombre := scanner.Text()
-			err := gestor.EliminarEjercicio(nombre)
+			escaner.Scan()
+			nombre := escaner.Text()
+			err := gestorDeEjercicios.EliminarEjercicio(nombre)
 			if err != nil {
 				fmt.Println("Error al eliminar el ejercicio:", err)
 			} else {
@@ -126,55 +130,55 @@ func gestionarEjercicios(gestor *ejercicio.GestorEjercicios, scanner *bufio.Scan
 			}
 		case "3":
 			fmt.Print("Nombre del ejercicio a consultar: ")
-			scanner.Scan()
-			nombre := scanner.Text()
-			ej, err := gestor.ConsultarEjercicio(nombre)
+			escaner.Scan()
+			nombre := escaner.Text()
+			ejercicio, err := gestorDeEjercicios.ConsultarEjercicio(nombre)
 			if err != nil {
 				fmt.Println("Error al consultar el ejercicio:", err)
 			} else {
-				fmt.Printf("Ejercicio: %+v\n", ej)
+				fmt.Printf("Ejercicio: %+v\n", ejercicio)
 			}
 		case "4":
 			fmt.Print("Nombre del ejercicio a modificar: ")
-			scanner.Scan()
-			nombre := scanner.Text()
+			escaner.Scan()
+			nombre := escaner.Text()
 			fmt.Print("Nueva descripción del ejercicio: ")
-			scanner.Scan()
-			descripcion := scanner.Text()
+			escaner.Scan()
+			descripcion := escaner.Text()
 			fmt.Print("Nuevo tiempo en segundos: ")
-			scanner.Scan()
-			tiempo, _ := strconv.Atoi(scanner.Text())
+			escaner.Scan()
+			tiempo, _ := strconv.Atoi(escaner.Text())
 			fmt.Print("Nuevas calorías quemadas: ")
-			scanner.Scan()
-			calorias, _ := strconv.Atoi(scanner.Text())
+			escaner.Scan()
+			calorias, _ := strconv.Atoi(escaner.Text())
 			fmt.Print("Nuevo tipo de ejercicio: ")
-			scanner.Scan()
-			tipo := scanner.Text()
+			escaner.Scan()
+			tipo := escaner.Text()
 			fmt.Print("Nuevos puntos por tipo de ejercicio: ")
-			scanner.Scan()
-			puntos, _ := strconv.Atoi(scanner.Text())
+			escaner.Scan()
+			puntos, _ := strconv.Atoi(escaner.Text())
 			fmt.Print("Nueva dificultad del ejercicio: ")
-			scanner.Scan()
-			dificultad := scanner.Text()
-			nuevoEjercicio := &ejercicio.Ejercicio{
-				Nombre:           nombre,
-				Descripcion:      descripcion,
-				TiempoEnSegundos: tiempo,
-				Calorias:         calorias,
-				Tipo:             tipo,
-				Puntos:           puntos,
-				Dificultad:       dificultad,
+			escaner.Scan()
+			dificultad := escaner.Text()
+			nuevoEjercicio := &ejercicio.Ejercicio {
+				NombreDeEjercicio:           	nombre,
+				DescripcionDeEjercicio:      	descripcion,
+				TiempoEnSegundosDeEjercicio:	tiempo,
+				CaloriasDeEjercicio:         	calorias,
+				TipoDeEjercicio:             	tipo,
+				PuntosPorTipoDeEjercicio:		puntos,
+				DificultadDeEjercicio:       	dificultad,
 			}
-			err := gestor.ModificarEjercicio(nombre, nuevoEjercicio)
+			err := gestorDeEjercicios.ModificarEjercicio(nombre, nuevoEjercicio)
 			if err != nil {
 				fmt.Println("Error al modificar el ejercicio:", err)
 			} else {
 				fmt.Println("Ejercicio modificado correctamente.")
 			}
 		case "5":
-			ejercicios := gestor.ListarEjercicios()
-			for _, ej := range ejercicios {
-				fmt.Printf("Ejercicio: %+v\n", ej)
+			ejercicios := gestorDeEjercicios.ListarEjercicios()
+			for _, ejercicio := range ejercicios {
+				fmt.Printf("Ejercicio: %+v\n", ejercicio)
 			}
 		case "6":
 			return
@@ -184,7 +188,13 @@ func gestionarEjercicios(gestor *ejercicio.GestorEjercicios, scanner *bufio.Scan
 	}
 }
 
-func gestionarRutinas(gestorEjercicios *ejercicio.GestorEjercicios, gestor *rutina.GestorRutinas, scanner *bufio.Scanner) {
+// gestionarRutinas maneja las operaciones relacionadas con la gestión de rutinas.
+//
+// Parámetros:
+//   - gestorDeEjercicios: Puntero a GestorDeEjercicios, la estructura que maneja los ejercicios.
+//   - gestorDeRutinas: Puntero a GestorDeRutinas, la estructura que maneja las rutinas.
+//   - escaner: Puntero a bufio.Scanner, usado para leer la entrada del usuario.
+func gestionarRutinas(gestorDeEjercicios *ejercicio.GestorDeEjercicios, gestorDeRutinas *rutina.GestorDeRutinas, escaner *bufio.Scanner) {
 	for {
 		fmt.Println("\n--- Gestión de Rutinas ---")
 		fmt.Println("\n1. Agregar Rutina Nueva")
@@ -196,38 +206,38 @@ func gestionarRutinas(gestorEjercicios *ejercicio.GestorEjercicios, gestor *ruti
 		fmt.Println("7. Generar Rutina Automágica")
 		fmt.Println("8. Volver al Menú Principal")
 		fmt.Print("Seleccione una opción: ")
-		if !scanner.Scan() {
+		if !escaner.Scan() {
 			break
 		}
-		opcion := scanner.Text()
+		opcion := escaner.Text()
 		switch opcion {
 		case "1":
 			fmt.Print("\nNombre de la rutina: ")
-			scanner.Scan()
-			nombre := scanner.Text()
+			escaner.Scan()
+			nombre := escaner.Text()
 			fmt.Println("\n--- Lista de Ejercicios Disponibles ---")
-			ejercicios := gestorEjercicios.ListarEjercicios()
+			ejercicios := gestorDeEjercicios.ListarEjercicios()
 			for indice, ejercicio := range ejercicios {
-				fmt.Printf("%d. %s\n", indice + 1, ejercicio.Nombre)
+				fmt.Printf("%d. %s\n", indice + 1, ejercicio.NombreDeEjercicio)
 			}
 			fmt.Println("\nIngrese los números de los ejercicios a incluir en la rutina, separados por comas:")
-			scanner.Scan()
-			ejerciciosSeleccionadosStr := scanner.Text()
+			escaner.Scan()
+			ejerciciosSeleccionadosString := escaner.Text()
 			ejerciciosSeleccionados := []ejercicio.Ejercicio{}
-			for _, numStr := range strings.Split(ejerciciosSeleccionadosStr, ",") {
-				num, err := strconv.Atoi(strings.TrimSpace(numStr))
-				if err != nil || num < 1 || num > len(ejercicios) {
-					fmt.Println("Número de ejercicio inválido:", numStr)
+			for _, numeroString := range strings.Split(ejerciciosSeleccionadosString, ",") {
+				numero, err := strconv.Atoi(strings.TrimSpace(numeroString))
+				if err != nil || numero < 1 || numero > len(ejercicios) {
+					fmt.Println("Número de ejercicio inválido:", numeroString)
 					continue
 				}
-				ejerciciosSeleccionados = append(ejerciciosSeleccionados, *ejercicios[num-1])
+				ejerciciosSeleccionados = append(ejerciciosSeleccionados, *ejercicios[numero - 1])
 			}
-			rut := &rutina.Rutina{
-				Nombre:     nombre,
-				CaracteristicasIndividuales: ejerciciosSeleccionados,
+			rutina := &rutina.Rutina {
+				NombreDeRutina:     					nombre,
+				CaracteristicasIndividualesDeRutina:	ejerciciosSeleccionados,
 			}
-			rut.CalcularPropiedades(gestorEjercicios)
-			err := gestor.AgregarRutina(rut)
+			rutina.CalcularPropiedades(gestorDeEjercicios)
+			err := gestorDeRutinas.AgregarRutina(rutina)
 			if err != nil {
 				fmt.Println("Error al agregar la rutina:", err)
 			} else {
@@ -235,9 +245,9 @@ func gestionarRutinas(gestorEjercicios *ejercicio.GestorEjercicios, gestor *ruti
 			}
 		case "2":
 			fmt.Print("Nombre de la rutina a eliminar: ")
-			scanner.Scan()
-			nombre := scanner.Text()
-			err := gestor.EliminarRutina(nombre)
+			escaner.Scan()
+			nombre := escaner.Text()
+			err := gestorDeRutinas.EliminarRutina(nombre)
 			if err != nil {
 				fmt.Println("Error al eliminar la rutina:", err)
 			} else {
@@ -245,50 +255,50 @@ func gestionarRutinas(gestorEjercicios *ejercicio.GestorEjercicios, gestor *ruti
 			}
 		case "3":
 			fmt.Print("Nombre de la rutina a consultar: ")
-			scanner.Scan()
-			nombre := scanner.Text()
-			rut, err := gestor.ConsultarRutina(nombre)
+			escaner.Scan()
+			nombre := escaner.Text()
+			rutina, err := gestorDeRutinas.ConsultarRutina(nombre)
 			if err != nil {
 				fmt.Println("Error al consultar la rutina:", err)
 			} else {
-				fmt.Printf("Rutina: %+v\n", rut)
+				fmt.Printf("Rutina: %+v\n", rutina)
 			}
 		case "4":
 			fmt.Print("Nombre de la rutina a modificar: ")
-			scanner.Scan()
-			nombre := scanner.Text()
+			escaner.Scan()
+			nombre := escaner.Text()
 			fmt.Print("Nuevo nombre de la rutina: ")
-			scanner.Scan()
-			nuevoNombre := scanner.Text()
+			escaner.Scan()
+			nuevoNombre := escaner.Text()
 			fmt.Println("¿Desea modificar los ejercicios de la rutina? (si/no): ")
-			scanner.Scan()
-			modificarEjercicios := scanner.Text() == "si"
+			escaner.Scan()
+			modificarEjercicios := escaner.Text() == "si"
 			var ejerciciosSeleccionados []ejercicio.Ejercicio
 			if modificarEjercicios {
 				fmt.Println("\n--- Lista de Ejercicios Disponibles ---")
-				ejercicios := gestorEjercicios.ListarEjercicios()
-				for i, ej := range ejercicios {
-					fmt.Printf("%d. %s\n", i+1, ej.Nombre)
+				ejercicios := gestorDeEjercicios.ListarEjercicios()
+				for indice, ejercicio := range ejercicios {
+					fmt.Printf("%d. %s\n", indice + 1, ejercicio.NombreDeEjercicio)
 				}
 				fmt.Println("\nIngrese los números de los ejercicios a incluir en la rutina, separados por comas:")
-				scanner.Scan()
-				ejerciciosSeleccionadosStr := scanner.Text()
+				escaner.Scan()
+				ejerciciosSeleccionadosString := escaner.Text()
 				ejerciciosSeleccionados = []ejercicio.Ejercicio{}
-				for _, numStr := range strings.Split(ejerciciosSeleccionadosStr, ",") {
-					num, err := strconv.Atoi(strings.TrimSpace(numStr))
-					if err != nil || num < 1 || num > len(ejercicios) {
-						fmt.Println("Número de ejercicio inválido:", numStr)
+				for _, numeroString := range strings.Split(ejerciciosSeleccionadosString, ",") {
+					numero, err := strconv.Atoi(strings.TrimSpace(numeroString))
+					if err != nil || numero < 1 || numero > len(ejercicios) {
+						fmt.Println("Número de ejercicio inválido:", numeroString)
 						continue
 					}
-					ejerciciosSeleccionados = append(ejerciciosSeleccionados, *ejercicios[num-1])
+					ejerciciosSeleccionados = append(ejerciciosSeleccionados, *ejercicios[numero - 1])
 				}
 			}
-			nuevaRut := &rutina.Rutina{
-				Nombre:     nuevoNombre,
-				CaracteristicasIndividuales: ejerciciosSeleccionados,
+			nuevaRutina := &rutina.Rutina {
+				NombreDeRutina:     					nuevoNombre,
+				CaracteristicasIndividualesDeRutina:	ejerciciosSeleccionados,
 			}
-			nuevaRut.CalcularPropiedades(gestorEjercicios)
-			err := gestor.ModificarRutina(nombre, nuevaRut)
+			nuevaRutina.CalcularPropiedades(gestorDeEjercicios)
+			err := gestorDeRutinas.ModificarRutina(nombre, nuevaRutina)
 			if err != nil {
 				fmt.Println("Error al modificar la rutina:", err)
 			} else {
@@ -296,25 +306,25 @@ func gestionarRutinas(gestorEjercicios *ejercicio.GestorEjercicios, gestor *ruti
 			}
 		case "5":
 			fmt.Println("\n--- Listar Rutinas ---")
-    		rutinas := gestor.ListarRutinas()
+    		rutinas := gestorDeRutinas.ListarRutinas()
     		if len(rutinas) == 0 {
         		fmt.Println("No hay rutinas disponibles.")
     		} else {
         		fmt.Println("Rutinas disponibles:")
-        		for i, rut := range rutinas {
-            		fmt.Printf("%d. %s\n", i+1, rut.Nombre)
+        		for indice, rutina := range rutinas {
+            		fmt.Printf("%d. %s\n", indice + 1, rutina.NombreDeRutina)
         		}
     		}
 		case "6":
 			fmt.Print("Dificultad de las rutinas a listar: ")
-			scanner.Scan()
-			dificultad := scanner.Text()
-			rutinas := gestor.ListarRutinasPorDificultad(dificultad)
-			for _, rut := range rutinas {
-				fmt.Printf("Rutina: %+v\n", rut)
+			escaner.Scan()
+			dificultad := escaner.Text()
+			rutinas := gestorDeRutinas.ListarRutinasPorDificultad(dificultad)
+			for _, rutina := range rutinas {
+				fmt.Printf("Rutina: %+v\n", rutina)
 			}
 		case "7":
-			gestionarRutinasAutomagicas(gestorEjercicios, gestor, scanner)
+			gestionarRutinasAutomagicas(gestorDeEjercicios, gestorDeRutinas, escaner)
 		case "8":
 			return
 		default:
@@ -323,7 +333,13 @@ func gestionarRutinas(gestorEjercicios *ejercicio.GestorEjercicios, gestor *ruti
 	}
 }
 
-func gestionarRutinasAutomagicas(gestorEjercicios *ejercicio.GestorEjercicios, gestor *rutina.GestorRutinas, scanner *bufio.Scanner) {
+// gestionarRutinasAutomagicas permite la gestión de la creación automática de rutinas de ejercicio a través de una interfaz de consola.
+//
+// Parámetros:
+//   - gestorDeEjercicios: puntero a una instancia de GestorDeEjercicios que maneja los ejercicios disponibles.
+//   - gestorDeRutinas: puntero a una instancia de GestorDeRutinas que maneja las rutinas creadas.
+//   - escaner: puntero a un bufio.Scanner utilizado para la entrada de datos por el usuario.
+func gestionarRutinasAutomagicas(gestorDeEjercicios *ejercicio.GestorDeEjercicios, gestorDeRutinas *rutina.GestorDeRutinas, escaner *bufio.Scanner) {
 	for {
 		fmt.Println("\n--- Gestión de Rutinas AUTOMÁGICAS ---")
 		fmt.Println("\n1. RUTINA AUTOMÁGICA 1 (Máxima cantidad: Se seleccionarán los ejercicios que cumplan con los parámetros establecidos y que maximicen la cantidad de ejercicios a realizar en el tiempo definido)")
@@ -331,49 +347,49 @@ func gestionarRutinasAutomagicas(gestorEjercicios *ejercicio.GestorEjercicios, g
 		fmt.Println("3. RUTINA AUTOMÁGICA 3 (Duración fija, Máximos puntos: Se seleccionarán los ejercicios que cumplan con los parámetros establecidos y que maximicen el puntaje de la rutina en la dimensión solicitada)")
 		fmt.Println("4. Volver al menú anterior")
 		fmt.Print("\nSeleccione una opción: ")
-		if !scanner.Scan() {
+		if !escaner.Scan() {
 			break
 		}
-		opcion := scanner.Text()
+		opcion := escaner.Text()
 		switch opcion {
 		case "1":
 			fmt.Print("\nNombre de la rutina: ")
-			scanner.Scan()
-			nombre := scanner.Text()
+			escaner.Scan()
+			nombre := escaner.Text()
 			fmt.Print("Duración total de la rutina (en minutos): ")
-			scanner.Scan()
-			duracionMinutos, _ := strconv.Atoi(scanner.Text())
+			escaner.Scan()
+			duracionEnMinutos, _ := strconv.Atoi(escaner.Text())
 			fmt.Print("Tipo(s) de ejercicios a incluir (separados por comas): ")
-			scanner.Scan()
-			tiposInput := scanner.Text()
-			tipos := strings.Split(tiposInput, ",")
-			for i, tipo := range tipos {
-				tipos[i] = strings.TrimSpace(tipo)
+			escaner.Scan()
+			entradaDeTipos := escaner.Text()
+			tipos := strings.Split(entradaDeTipos, ",")
+			for indice, tipo := range tipos {
+				tipos[indice] = strings.TrimSpace(tipo)
 			}
 			fmt.Print("Dificultad: ")
-			scanner.Scan()
-			dificultad := scanner.Text()
-			ejerciciosFiltrados := gestorEjercicios.FiltrarPorTiposYDificultad(tipos, dificultad)
+			escaner.Scan()
+			dificultad := escaner.Text()
+			ejerciciosFiltrados := gestorDeEjercicios.FiltrarPorTiposYDificultad(tipos, dificultad)
 			if len(ejerciciosFiltrados) == 0 {
 				fmt.Println("No se encontraron ejercicios válidos para esta rutina")
 				return
 			}
-			ejerciciosOrdenados := gestorEjercicios.OrdenarTiempoMenorAMayor(ejerciciosFiltrados)
-			duracionTotalSegundos := duracionMinutos * 60
-			rutinaAutomagica := &rutina.Rutina{
-				Nombre: nombre,
+			ejerciciosOrdenados := gestorDeEjercicios.OrdenarTiempoMenorAMayor(ejerciciosFiltrados)
+			duracionTotalEnSegundos := duracionEnMinutos * 60
+			rutinaAutomagica := &rutina.Rutina {
+				NombreDeRutina:	nombre,
 			}
 			duracionAcumulada := 0
-			for _, ej := range ejerciciosOrdenados {
-				if duracionAcumulada+ej.TiempoEnSegundos <= duracionTotalSegundos {
-					rutinaAutomagica.CaracteristicasIndividuales = append(rutinaAutomagica.CaracteristicasIndividuales, *ej)
-					duracionAcumulada += ej.TiempoEnSegundos
+			for _, ejercicio := range ejerciciosOrdenados {
+				if duracionAcumulada + ejercicio.TiempoEnSegundosDeEjercicio <= duracionTotalEnSegundos {
+					rutinaAutomagica.CaracteristicasIndividualesDeRutina = append(rutinaAutomagica.CaracteristicasIndividualesDeRutina, *ejercicio)
+					duracionAcumulada += ejercicio.TiempoEnSegundosDeEjercicio
 				} else {
 					break
 				}
 			}
-			rutinaAutomagica.CalcularPropiedades(gestorEjercicios)
-			err := gestor.AgregarRutina(rutinaAutomagica)
+			rutinaAutomagica.CalcularPropiedades(gestorDeEjercicios)
+			err := gestorDeRutinas.AgregarRutina(rutinaAutomagica)
 			if err != nil {
 				fmt.Println("Error al generar la rutina automágica:", err)
 			} else {
@@ -381,34 +397,33 @@ func gestionarRutinasAutomagicas(gestorEjercicios *ejercicio.GestorEjercicios, g
 			}
 		case "2":
 			fmt.Print("\nNombre de la rutina: ")
-			scanner.Scan()
-			nombre := scanner.Text()
+			escaner.Scan()
+			nombre := escaner.Text()
 			fmt.Print("Calorías totales a quemar: ")
-			scanner.Scan()
-			caloriasTotales, _ := strconv.Atoi(scanner.Text())
-			ejercicios := gestorEjercicios.ListarEjercicios()
+			escaner.Scan()
+			caloriasTotales, _ := strconv.Atoi(escaner.Text())
+			ejercicios := gestorDeEjercicios.ListarEjercicios()
 			ejerciciosFiltrados := []*ejercicio.Ejercicio{}
-			for _, ej := range ejercicios {
-				if ej.Calorias <= caloriasTotales {
-					ejerciciosFiltrados = append(ejerciciosFiltrados, ej)
+			for _, ejercicio := range ejercicios {
+				if ejercicio.CaloriasDeEjercicio <= caloriasTotales {
+					ejerciciosFiltrados = append(ejerciciosFiltrados, ejercicio)
 				}
 			}
-			ejerciciosOrdenados := gestorEjercicios.OrdenarTiempoMenorAMayor(ejerciciosFiltrados)
-			
-			rutinaAutomagica := &rutina.Rutina{
-				Nombre: nombre,
+			ejerciciosOrdenados := gestorDeEjercicios.OrdenarTiempoMenorAMayor(ejerciciosFiltrados)
+			rutinaAutomagica := &rutina.Rutina {
+				NombreDeRutina:	nombre,
 			}
 			caloriasAcumuladas := 0
-			for _, ej := range ejerciciosOrdenados {
-				if caloriasAcumuladas+ej.Calorias <= caloriasTotales {
-					rutinaAutomagica.CaracteristicasIndividuales = append(rutinaAutomagica.CaracteristicasIndividuales, *ej)
-					caloriasAcumuladas += ej.Calorias
+			for _, ejercicio := range ejerciciosOrdenados {
+				if caloriasAcumuladas + ejercicio.CaloriasDeEjercicio <= caloriasTotales {
+					rutinaAutomagica.CaracteristicasIndividualesDeRutina = append(rutinaAutomagica.CaracteristicasIndividualesDeRutina, *ejercicio)
+					caloriasAcumuladas += ejercicio.CaloriasDeEjercicio
 				} else {
 					break
 				}
 			}
-			rutinaAutomagica.CalcularPropiedades(gestorEjercicios)
-			err := gestor.AgregarRutina(rutinaAutomagica)
+			rutinaAutomagica.CalcularPropiedades(gestorDeEjercicios)
+			err := gestorDeRutinas.AgregarRutina(rutinaAutomagica)
 			if err != nil {
 				fmt.Println("Error al generar la rutina automágica:", err)
 			} else {
@@ -416,38 +431,38 @@ func gestionarRutinasAutomagicas(gestorEjercicios *ejercicio.GestorEjercicios, g
 			}
 		case "3":
 			fmt.Print("\nNombre de la rutina: ")
-			scanner.Scan()
-			nombre := scanner.Text()
+			escaner.Scan()
+			nombre := escaner.Text()
 			fmt.Print("Tipo de puntos a maximizar (cardio, fuerza, flexibilidad): ")
-			scanner.Scan()
-			tipoPuntos := scanner.Text()
+			escaner.Scan()
+			puntosPorTipo := escaner.Text()
 			fmt.Print("Duración máxima de la rutina (en minutos): ")
-			scanner.Scan()
-			duracionMaximaMinutos, _ := strconv.Atoi(scanner.Text())
-			ejerciciosFiltrados := gestorEjercicios.FiltrarPorTipoPuntosYDuracionMaxima(tipoPuntos, duracionMaximaMinutos)
+			escaner.Scan()
+			duracionMaximaEnMinutos, _ := strconv.Atoi(escaner.Text())
+			ejerciciosFiltrados := gestorDeEjercicios.FiltrarPorTipoPuntosYDuracionMaxima(puntosPorTipo, duracionMaximaEnMinutos)
 			if len(ejerciciosFiltrados) == 0 {
 				fmt.Println("No se encontraron ejercicios válidos para esta rutina")
 				return
 			}
-			ejerciciosOrdenados := gestorEjercicios.OrdenarPorPuntajeDescendente(ejerciciosFiltrados)
-			duracionTotalSegundos := duracionMaximaMinutos * 60
-			rutinaAutomagica := &rutina.Rutina{
-				Nombre: nombre,
+			ejerciciosOrdenados := gestorDeEjercicios.OrdenarPorPuntajeDescendente(ejerciciosFiltrados)
+			duracionTotalEnSegundos := duracionMaximaEnMinutos * 60
+			rutinaAutomagica := &rutina.Rutina {
+				NombreDeRutina:	nombre,
 			}
 			puntajeTotal := 0
 			duracionTotal := 0
 			ejerciciosUtilizados := make(map[string]bool)
-			for _, ej := range ejerciciosOrdenados {
-				if duracionTotal+ej.TiempoEnSegundos <= duracionTotalSegundos && !ejerciciosUtilizados[ej.Nombre] {
-					rutinaAutomagica.CaracteristicasIndividuales = append(rutinaAutomagica.CaracteristicasIndividuales, *ej)
-					puntajeTotal += ej.Puntos
-					duracionTotal += ej.TiempoEnSegundos
-					ejerciciosUtilizados[ej.Nombre] = true
+			for _, ejercicio := range ejerciciosOrdenados {
+				if duracionTotal + ejercicio.TiempoEnSegundosDeEjercicio <= duracionTotalEnSegundos && !ejerciciosUtilizados[ejercicio.NombreDeEjercicio] {
+					rutinaAutomagica.CaracteristicasIndividualesDeRutina = append(rutinaAutomagica.CaracteristicasIndividualesDeRutina, *ejercicio)
+					puntajeTotal += ejercicio.PuntosPorTipoDeEjercicio
+					duracionTotal += ejercicio.TiempoEnSegundosDeEjercicio
+					ejerciciosUtilizados[ejercicio.NombreDeEjercicio] = true
 				}
 			}
-			rutinaAutomagica.Puntos = puntajeTotal
-			rutinaAutomagica.TiempoEnMinutos = duracionTotal
-			err := gestor.AgregarRutina(rutinaAutomagica)
+			rutinaAutomagica.PuntosDeRutina = puntajeTotal
+			rutinaAutomagica.TiempoEnMinutosDeRutina = duracionTotal
+			err := gestorDeRutinas.AgregarRutina(rutinaAutomagica)
 			if err != nil {
 				fmt.Println("Error al generar la rutina automágica:", err)
 			} else {
@@ -461,7 +476,13 @@ func gestionarRutinasAutomagicas(gestorEjercicios *ejercicio.GestorEjercicios, g
 	}
 }
 
-func GestionarCSV(gestorEjercicios *ejercicio.GestorEjercicios, gestorRutinas *rutina.GestorRutinas, scanner *bufio.Scanner) {
+// GestionarCSV maneja la importación y exportación de datos en formato CSV.
+//
+// Parámetros:
+//   - gestorDeEjercicios: Puntero a GestorDeEjercicios, la estructura que maneja los ejercicios.
+//   - gestorDeRutinas: Puntero a GestorDeRutinas, la estructura que maneja las rutinas.
+//   - escaner: Puntero a bufio.Scanner, usado para leer la entrada del usuario.
+func GestionarCSV(gestorDeEjercicios *ejercicio.GestorDeEjercicios, gestorDeRutinas *rutina.GestorDeRutinas, escaner *bufio.Scanner) {
 	for {
 		fmt.Println("\n--- Gestión de Archivos CSV ---")
 		fmt.Println("\n1. Guardar Ejercicios en CSV")
@@ -470,16 +491,16 @@ func GestionarCSV(gestorEjercicios *ejercicio.GestorEjercicios, gestorRutinas *r
 		fmt.Println("4. Cargar Rutinas desde CSV")
 		fmt.Println("5. Volver al Menú Principal")
 		fmt.Print("Seleccione una opción: ")
-		if !scanner.Scan() {
+		if !escaner.Scan() {
 			break
 		}
-		opcion := scanner.Text()
+		opcion := escaner.Text()
 		switch opcion {
 		case "1":
 			fmt.Print("Ingrese el nombre del archivo para guardar los ejercicios: ")
-			if scanner.Scan() {
-				nombreDeArchivo := scanner.Text()
-				err := almacenamiento.GuardarEjercicios(gestorEjercicios.ListarEjercicios(), nombreDeArchivo)
+			if escaner.Scan() {
+				nombreDeArchivo := escaner.Text()
+				err := almacenamiento.GuardarEjercicios(gestorDeEjercicios.ListarEjercicios(), nombreDeArchivo)
 				if err != nil {
 					fmt.Println("Error al guardar los ejercicios:", err)
 				} else {
@@ -488,23 +509,23 @@ func GestionarCSV(gestorEjercicios *ejercicio.GestorEjercicios, gestorRutinas *r
 			}
 		case "2":
 			fmt.Print("Ingrese el nombre del archivo desde donde cargar los ejercicios: ")
-			if scanner.Scan() {
-				nombreDeArchivo := scanner.Text()
+			if escaner.Scan() {
+				nombreDeArchivo := escaner.Text()
 				ejercicios, err := almacenamiento.CargarEjercicios(nombreDeArchivo)
 				if err != nil {
 					fmt.Println("Error al cargar los ejercicios:", err)
 				} else {
-					for _, ej := range ejercicios {
-						gestorEjercicios.AgregarEjercicio(ej)
+					for _, ejercicio := range ejercicios {
+						gestorDeEjercicios.AgregarEjercicio(ejercicio)
 					}
 					fmt.Println("Ejercicios cargados correctamente.")
 				}
 			}
 		case "3":
 			fmt.Print("Ingrese el nombre del archivo para guardar las rutinas: ")
-			if scanner.Scan() {
-				nombreDeArchivo := scanner.Text()
-				err := almacenamiento.GuardarRutinas(gestorRutinas.ListarRutinas(), gestorEjercicios, nombreDeArchivo)
+			if escaner.Scan() {
+				nombreDeArchivo := escaner.Text()
+				err := almacenamiento.GuardarRutinas(gestorDeRutinas.ListarRutinas(), gestorDeEjercicios, nombreDeArchivo)
 				if err != nil {
 					fmt.Println("Error al guardar las rutinas:", err)
 				} else {
@@ -513,14 +534,14 @@ func GestionarCSV(gestorEjercicios *ejercicio.GestorEjercicios, gestorRutinas *r
 			}
 		case "4":
 			fmt.Print("Ingrese el nombre del archivo desde donde cargar las rutinas: ")
-			if scanner.Scan() {
-				nombreDeArchivo := scanner.Text()
+			if escaner.Scan() {
+				nombreDeArchivo := escaner.Text()
 				rutinas, err := almacenamiento.CargarRutinas(nombreDeArchivo)
 				if err != nil {
 					fmt.Println("Error al cargar las rutinas:", err)
 				} else {
-					for _, rt := range rutinas {
-						gestorRutinas.AgregarRutina(rt)
+					for _, rutina := range rutinas {
+						gestorDeRutinas.AgregarRutina(rutina)
 					}
 					fmt.Println("Rutinas cargadas correctamente.")
 				}

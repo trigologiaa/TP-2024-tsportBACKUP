@@ -8,29 +8,26 @@ import (
 
 // Ejercicio es una estructura con las características que tendrá su campo.
 type Ejercicio struct {
-	Nombre      string `csv:"Nombre"`      // Nombre del ejercicio
-	Descripcion string `csv:"Descripcion"` // Descripción del ejercicio
-	TiempoEnSegundos      int    `csv:"TiempoEnSegundos"`      // Tiempo estimado en segundos
-	Calorias    int    `csv:"Calorias"`    // Calorías quemadas
-	Tipo        string `csv:"Tipo"`        // Tipo de ejercicio
-	Puntos      int    `csv:"Puntos"`      // Puntos por tipo de ejercicio
-	Dificultad  string `csv:"Dificultad"`  // Nivel de dificultad
+	NombreDeEjercicio      		string	`csv:"Nombre"`      		// Nombre del ejercicio
+	DescripcionDeEjercicio 		string	`csv:"Descripcion"` 		// Descripción del ejercicio
+	TiempoEnSegundosDeEjercicio	int		`csv:"TiempoEnSegundos"`	// Tiempo estimado en segundos
+	CaloriasDeEjercicio    		int		`csv:"Calorias"`    		// Calorías quemadas
+	TipoDeEjercicio        		string	`csv:"Tipo"`        		// Tipo de ejercicio
+	PuntosPorTipoDeEjercicio   	int		`csv:"Puntos"`      		// Puntos por tipo de ejercicio
+	DificultadDeEjercicio  		string	`csv:"Dificultad"`  		// Nivel de dificultad
 }
 
-// GestorEjercicios es una estructura para gestionar los ejercicios.
-type GestorEjercicios struct {
+// GestorDeEjercicios es una estructura para gestionar los ejercicios.
+type GestorDeEjercicios struct {
 	ejercicios *lista.DoubleLinkedList[*Ejercicio]
 }
 
-// NuevoGestorEjercicios crea una nueva estructura 'GestorEjercicios'.
-//
-// Parámetros:
-//   - Sin parámetros.
+// NuevoGestorDeEjercicios crea una nueva estructura 'GestorDeEjercicios'.
 //
 // Retorna:
-//   - Un puntero a GestorEjercicios.
-func NuevoGestorEjercicios() *GestorEjercicios {
-	return &GestorEjercicios{
+//   - Un puntero a GestorDeEjercicios.
+func NuevoGestorDeEjercicios() *GestorDeEjercicios {
+	return &GestorDeEjercicios {
 		ejercicios: lista.NewDoubleLinkedList[*Ejercicio](),
 	}
 }
@@ -38,32 +35,33 @@ func NuevoGestorEjercicios() *GestorEjercicios {
 // AgregarEjercicio añade un nuevo ejercicio a la lista en caso de no existir.
 //
 // Parámetros:
-//   - 'ejercicio' será un puntero a una instancia de la estructura 'Ejercicio'.
+//   - ejercicio: Puntero a Ejercicio, el ejercicio a añadir.
 //
 // Retorna:
-//   - Un nil en caso de que se haya agregado el ejercicio.
-//   - Un error en caso de que ya exista el ejercicio.
-func (gestor *GestorEjercicios) AgregarEjercicio(ejercicio *Ejercicio) error {
-	for nodo := gestor.ejercicios.Head(); nodo != nil; nodo = nodo.Next() {
-        if nodo.Data().Nombre == ejercicio.Nombre {
+//   - nil si el ejercicio se agregó correctamente.
+//   - error si el ejercicio ya existe.
+func (gestorDeEjercicios *GestorDeEjercicios) AgregarEjercicio(ejercicio *Ejercicio) error {
+	for nodo := gestorDeEjercicios.ejercicios.Head(); nodo != nil; nodo = nodo.Next() {
+        if nodo.Data().NombreDeEjercicio == ejercicio.NombreDeEjercicio {
             return errors.New("el ejercicio ya existe")
         }
     }
-    gestor.ejercicios.Append(ejercicio)
+    gestorDeEjercicios.ejercicios.Append(ejercicio)
     return nil
 }
 
 // EliminarEjercicio busca un ejercicio por su nombre y lo elimina de la lista.
+//
 // Parámetros:
-//   - 'nombre' será el nombre del ejercicio a buscar.
+//   - nombreDeEjercicio: string, el nombre del ejercicio a eliminar.
 //
 // Retorna:
-//   - Un nil en caso de que se haya eliminado el ejercicio.
-//   - Un error en caso de que no se encuentre en la lista.
-func (g *GestorEjercicios) EliminarEjercicio(nombre string) error {
-	for nodo := g.ejercicios.Head(); nodo != nil; nodo = nodo.Next() {
-		if nodo.Data().Nombre == nombre {
-			g.ejercicios.Remove(nodo.Data())
+//   - nil si el ejercicio se eliminó correctamente.
+//   - error si el ejercicio no se encuentra en la lista.
+func (gestorDeEjercicios *GestorDeEjercicios) EliminarEjercicio(nombreDeEjercicio string) error {
+	for nodo := gestorDeEjercicios.ejercicios.Head(); nodo != nil; nodo = nodo.Next() {
+		if nodo.Data().NombreDeEjercicio == nombreDeEjercicio {
+			gestorDeEjercicios.ejercicios.Remove(nodo.Data())
 			return nil
 		}
 	}
@@ -73,14 +71,14 @@ func (g *GestorEjercicios) EliminarEjercicio(nombre string) error {
 // ConsultarEjercicio busca un ejercicio por su nombre.
 //
 // Parámetros:
-//   - 'nombre' será el nombre del ejercicio a buscar.
+//   - nombreDeEjercicio: string, el nombre del ejercicio a buscar.
 //
 // Retorna:
-//   - Un puntero al ejercicio en caso de encontrarlo.
-//   - Un error en caso de que no se encuentre en la lista.
-func (g *GestorEjercicios) ConsultarEjercicio(nombre string) (*Ejercicio, error) {
-	for nodo := g.ejercicios.Head(); nodo != nil; nodo = nodo.Next() {
-		if nodo.Data().Nombre == nombre {
+//   - Puntero a Ejercicio si el ejercicio se encuentra.
+//   - error si el ejercicio no se encuentra en la lista.
+func (gestorDeEjercicios *GestorDeEjercicios) ConsultarEjercicio(nombreDeEjercicio string) (*Ejercicio, error) {
+	for nodo := gestorDeEjercicios.ejercicios.Head(); nodo != nil; nodo = nodo.Next() {
+		if nodo.Data().NombreDeEjercicio == nombreDeEjercicio {
 			return nodo.Data(), nil
 		}
 	}
@@ -90,56 +88,51 @@ func (g *GestorEjercicios) ConsultarEjercicio(nombre string) (*Ejercicio, error)
 // ModificarEjercicio busca un ejercicio por su nombre y modifica sus campos.
 //
 // Parámetros:
-//   - 'nombre' será el nombre del ejercicio a modificar.
-//   - 'nuevoEjercicio' será un puntero a la estructura Ejercicio con los nuevos valores.
+//   - nombreDeEjercicio: string, el nombre del ejercicio a modificar.
+//   - nuevoEjercicio: Puntero a Ejercicio, con los nuevos valores del ejercicio.
 //
 // Retorna:
-//   - Un nil en caso de que se haya modificado el ejercicio correctamente.
-//   - Un error en caso de que no se encuentre el ejercicio.
-func (g *GestorEjercicios) ModificarEjercicio(nombre string, nuevoEjercicio *Ejercicio) error {
-	for nodo := g.ejercicios.Head(); nodo != nil; nodo = nodo.Next() {
-		if nodo.Data().Nombre == nombre {
-			nodo.Data().Nombre = nuevoEjercicio.Nombre
-			nodo.Data().Descripcion = nuevoEjercicio.Descripcion
-			nodo.Data().TiempoEnSegundos = nuevoEjercicio.TiempoEnSegundos
-			nodo.Data().Calorias = nuevoEjercicio.Calorias
-			nodo.Data().Tipo = nuevoEjercicio.Tipo
-			nodo.Data().Puntos = nuevoEjercicio.Puntos
-			nodo.Data().Dificultad = nuevoEjercicio.Dificultad
+//   - nil si el ejercicio se modificó correctamente.
+//   - error si el ejercicio no se encuentra en la lista.
+func (gestorDeEjercicios *GestorDeEjercicios) ModificarEjercicio(nombreDeEjercicio string, nuevoEjercicio *Ejercicio) error {
+	for nodo := gestorDeEjercicios.ejercicios.Head(); nodo != nil; nodo = nodo.Next() {
+		if nodo.Data().NombreDeEjercicio == nombreDeEjercicio {
+			nodo.Data().NombreDeEjercicio = nuevoEjercicio.NombreDeEjercicio
+			nodo.Data().DescripcionDeEjercicio = nuevoEjercicio.DescripcionDeEjercicio
+			nodo.Data().TiempoEnSegundosDeEjercicio = nuevoEjercicio.TiempoEnSegundosDeEjercicio
+			nodo.Data().CaloriasDeEjercicio = nuevoEjercicio.CaloriasDeEjercicio
+			nodo.Data().TipoDeEjercicio = nuevoEjercicio.TipoDeEjercicio
+			nodo.Data().PuntosPorTipoDeEjercicio = nuevoEjercicio.PuntosPorTipoDeEjercicio
+			nodo.Data().DificultadDeEjercicio = nuevoEjercicio.DificultadDeEjercicio
 			return nil
 		}
 	}
 	return errors.New("ejercicio no encontrado")
 }
 
-// ObtenerTodosLosEjercicios devuelve una lista de todos los ejercicios almacenados en la gestión.
-//
-// Parámetros:
-//   - Sin parámetros.
+// ListarEjercicios devuelve una lista de todos los ejercicios almacenados en la gestión.
 //
 // Retorna:
-//   - Un slice con todos los ejercicios.
-func (g *GestorEjercicios) ListarEjercicios() []*Ejercicio {
+//   - Un slice de punteros a Ejercicio que contiene todos los ejercicios.
+func (gestorDeEjercicios *GestorDeEjercicios) ListarEjercicios() []*Ejercicio {
 	var ejercicios []*Ejercicio
-	for nodo := g.ejercicios.Head(); nodo != nil; nodo = nodo.Next() {
+	for nodo := gestorDeEjercicios.ejercicios.Head(); nodo != nil; nodo = nodo.Next() {
 		ejercicios = append(ejercicios, nodo.Data())
 	}
 	return ejercicios
 }
 
-//Métodos que no van al menú sino que se llaman desde otros métodos
-
-// ObtenerEjerciciosPorNombres devuelve una lista de ejercicios que coinciden con los nombres proporcionados.
+// ObtenerEjercicioPorNombre devuelve una lista de ejercicios que coinciden con los nombres proporcionados.
 //
 // Parámetros:
-//   - 'nombres' será un slice de strings con los nombres de los ejercicios a buscar.
+//   - nombresDeEjercicios: slice de strings, con los nombres de los ejercicios a buscar.
 //
 // Retorna:
 //   - Un slice de punteros a Ejercicio que coinciden con los nombres especificados.
-func (g *GestorEjercicios) ObtenerEjercicioPorNombre(nombres []string) []*Ejercicio {
+func (gestorDeEjercicios *GestorDeEjercicios) ObtenerEjercicioPorNombre(nombresDeEjercicios []string) []*Ejercicio {
 	var ejercicios []*Ejercicio
-	for _, nombre := range nombres {
-		ejercicio, err := g.ConsultarEjercicio(nombre)
+	for _, nombreDeEjercicio := range nombresDeEjercicios {
+		ejercicio, err := gestorDeEjercicios.ConsultarEjercicio(nombreDeEjercicio)
 		if err == nil {
 			ejercicios = append(ejercicios, ejercicio)
 		}
@@ -147,20 +140,20 @@ func (g *GestorEjercicios) ObtenerEjercicioPorNombre(nombres []string) []*Ejerci
 	return ejercicios
 }
 
-// FiltrarEjerciciosAutomagica1 devuelve una lista de ejercicios que coinciden con el tipo y la dificultad especificados.
+// FiltrarPorTiposYDificultad devuelve una lista de ejercicios que coinciden con el tipo y la dificultad especificados.
 //
 // Parámetros:
-//   - 'tipo' será un string que indica el tipo de ejercicio a buscar.
-//   - 'dificultad' será un string que indica el nivel de dificultad de los ejercicios a buscar.
+//   - tipos: slice de strings, que indica los tipos de ejercicio a buscar.
+//   - dificultad: string, que indica el nivel de dificultad de los ejercicios a buscar.
 //
 // Retorna:
 //   - Un slice de punteros a Ejercicio que coinciden con el tipo y la dificultad especificados.
-func (g *GestorEjercicios) FiltrarPorTiposYDificultad(tipos []string, dificultad string) []*Ejercicio {
+func (gestorDeEjercicios *GestorDeEjercicios) FiltrarPorTiposYDificultad(tipos []string, dificultad string) []*Ejercicio {
 	var ejerciciosFiltrados []*Ejercicio
-	for nodo := g.ejercicios.Head(); nodo != nil; nodo = nodo.Next() {
+	for nodo := gestorDeEjercicios.ejercicios.Head(); nodo != nil; nodo = nodo.Next() {
 		ejercicio := nodo.Data()
 		for _, tipo := range tipos {
-			if ejercicio.Tipo == tipo && ejercicio.Dificultad == dificultad {
+			if ejercicio.TipoDeEjercicio == tipo && ejercicio.DificultadDeEjercicio == dificultad {
 				ejerciciosFiltrados = append(ejerciciosFiltrados, ejercicio)
 				break
 			}
@@ -169,10 +162,16 @@ func (g *GestorEjercicios) FiltrarPorTiposYDificultad(tipos []string, dificultad
 	return ejerciciosFiltrados
 }
 
-// OrdenamientoAutomagica1 ordena los ejercicios filtrados por tiempo en segundos de menor a mayor.
-func (g *GestorEjercicios) OrdenarTiempoMenorAMayor(ejercicios []*Ejercicio) []*Ejercicio {
+// OrdenarTiempoMenorAMayor ordena los ejercicios filtrados por tiempo en segundos de menor a mayor.
+//
+// Parámetros:
+//   - ejercicios: slice de punteros a Ejercicio, que se desea ordenar.
+//
+// Retorna:
+//   - Un slice de punteros a Ejercicio ordenado por tiempo en segundos de menor a mayor.
+func (gestorDeEjercicios *GestorDeEjercicios) OrdenarTiempoMenorAMayor(ejercicios []*Ejercicio) []*Ejercicio {
 	sort.Slice(ejercicios, func(i, j int) bool {
-		return ejercicios[i].TiempoEnSegundos < ejercicios[j].TiempoEnSegundos
+		return ejercicios[i].TiempoEnSegundosDeEjercicio < ejercicios[j].TiempoEnSegundosDeEjercicio
 	})
 	return ejercicios
 }
@@ -180,16 +179,16 @@ func (g *GestorEjercicios) OrdenarTiempoMenorAMayor(ejercicios []*Ejercicio) []*
 // FiltrarPorTipoPuntosYDuracionMaxima devuelve una lista de ejercicios que coinciden con el tipo de puntos y la duración máxima especificados.
 //
 // Parámetros:
-//   - 'tipoPuntos' es un string que indica el tipo de puntos a maximizar (cardio, fuerza, flexibilidad).
-//   - 'duracionMaximaMinutos' es la duración máxima de la rutina en minutos.
+//   - puntosPorTipo: string, que indica el tipo de puntos a maximizar (cardio, fuerza, flexibilidad).
+//   - duracionMaximaEnMinutos: int, la duración máxima de la rutina en minutos.
 //
 // Retorna:
 //   - Un slice de punteros a Ejercicio que coinciden con los criterios especificados.
-func (g *GestorEjercicios) FiltrarPorTipoPuntosYDuracionMaxima(tipoPuntos string, duracionMaximaMinutos int) []*Ejercicio {
+func (gestorDeEjercicios *GestorDeEjercicios) FiltrarPorTipoPuntosYDuracionMaxima(puntosPorTipo string, duracionMaximaEnMinutos int) []*Ejercicio {
 	var ejerciciosFiltrados []*Ejercicio
-	for nodo := g.ejercicios.Head(); nodo != nil; nodo = nodo.Next() {
+	for nodo := gestorDeEjercicios.ejercicios.Head(); nodo != nil; nodo = nodo.Next() {
 		ejercicio := nodo.Data()
-		if ejercicio.Tipo == tipoPuntos && ejercicio.TiempoEnSegundos <= duracionMaximaMinutos*60 {
+		if ejercicio.TipoDeEjercicio == puntosPorTipo && ejercicio.TiempoEnSegundosDeEjercicio <= duracionMaximaEnMinutos * 60 {
 			ejerciciosFiltrados = append(ejerciciosFiltrados, ejercicio)
 		}
 	}
@@ -199,13 +198,13 @@ func (g *GestorEjercicios) FiltrarPorTipoPuntosYDuracionMaxima(tipoPuntos string
 // OrdenarPorPuntajeDescendente ordena los ejercicios por puntaje de manera descendente.
 //
 // Parámetros:
-//   - 'ejercicios' es un slice de punteros a Ejercicio.
+//   - ejercicios: slice de punteros a Ejercicio, que se desea ordenar.
 //
 // Retorna:
 //   - Un slice de punteros a Ejercicio ordenado por puntaje de manera descendente.
-func (g *GestorEjercicios) OrdenarPorPuntajeDescendente(ejercicios []*Ejercicio) []*Ejercicio {
+func (gestorDeEjercicios *GestorDeEjercicios) OrdenarPorPuntajeDescendente(ejercicios []*Ejercicio) []*Ejercicio {
 	sort.Slice(ejercicios, func(i, j int) bool {
-		return ejercicios[i].Puntos > ejercicios[j].Puntos
+		return ejercicios[i].PuntosPorTipoDeEjercicio > ejercicios[j].PuntosPorTipoDeEjercicio
 	})
 	return ejercicios
 }
