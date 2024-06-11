@@ -4,6 +4,11 @@
   <img src="https://3fc4ed44-3fbc-419a-97a1-a29742511391.selcdn.net/coub_storage/coub/simple/cw_timeline_pic/1da1427f569/5e81901d95dfdb8e9941e/med_1610325676_image.jpg" alt="Texto alternativo">
 </p>
 
+<div id="video-play-button-container-3721493" class="video-play-button-container" data-video-id="3721493">
+<img class="video-play-button hidden" src="/images/icons/icon_play.png" alt="play">
+<div class="video-spinner-container hidden"></div>
+</div>
+
 <h3 align="center">Resumen</h2>
 
 El proyecto consiste en la implementación de un sistema de gestión de ejercicios y rutinas que permitirá a los usuarios el manejo de infromación relacionado con distintos tipos de ejrrcicios y así compilar estos mismos en rutinas personalizadas. Usa estructuras de datos dinámicas como listas doblemente enlazadas para así poder gestionar los datos de manera más eficiente. Este programa implementándose en Go, utilizando testeos que verifican la funcionalidad del sistema.
