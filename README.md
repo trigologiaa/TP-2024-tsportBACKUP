@@ -1,7 +1,7 @@
 <h1 align="center">CONCLUSIÓN</h1>
 
 <p align="center">
-  <img src="https://twitter.com/i/status/1738443047719809126" alt="Texto alternativo">
+  <img src="https://3fc4ed44-3fbc-419a-97a1-a29742511391.selcdn.net/coub_storage/coub/simple/cw_timeline_pic/1da1427f569/5e81901d95dfdb8e9941e/med_1610325676_image.jpg" alt="Texto alternativo">
 </p>
 
 <h3 align="center">Resumen</h2>
