@@ -21,9 +21,13 @@ El proyecto consiste en la implementación de un sistema de gestión de ejercici
 
 <h3 align="center">Explicación del Código Fuente</h2>
 
-El código fuente se divide en 3 grupos importantes:
+El código fuente se divide en 4 carpetas principales:
 
-<h4>/informacion</h4>
+<h4>- /extras</h4>
+
+Contiene 1 archivo completamente esencial para el funcionamiento del proyecto.
+
+<h4>- /informacion</h4>
 
 Contiene archivos con la información de los ejercicios y rutinas en formato CSV tanto para guardar la información sobre estos archivos o para cargarla sobre los mismos.
 
