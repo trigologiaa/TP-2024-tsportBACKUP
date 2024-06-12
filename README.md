@@ -8,9 +8,10 @@
   <img src="https://i.kym-cdn.com/photos/images/newsfeed/002/805/512/39d.jpg" alt="Texto alternativo">
 </p>*/ -->
 
-<h3 align="center">Resumen</h2>
-
-El proyecto consiste en la implementación de un sistema de gestión de ejercicios y rutinas que permite a los usuarios el manejo de información relacionado con distintos tipos de ejercicios y así compilar estos mismos en rutinas personalizadas. Usa estructuras de datos dinámicas como listas doblemente enlazadas para así poder gestionar los datos de manera más eficiente. Este programa implementándose en Go, utilizando testeos que verifican la funcionalidad del sistema tanto para los métodos de los ejercicios como para los de las rutinas.
+<center>
+    <h1>Resumen</h1>
+    <p>El proyecto consiste en la implementación de un sistema de gestión de ejercicios y rutinas que permite a los usuarios el manejo de información relacionado con distintos tipos de ejercicios y así compilar estos mismos en rutinas personalizadas. Usa estructuras de datos dinámicas como listas doblemente enlazadas para así poder gestionar los datos de manera más eficiente. Este programa implementándose en Go, utilizando testeos que verifican la funcionalidad del sistema tanto para los métodos de los ejercicios como para los de las rutinas.</p>
+</center>
 
 <h4>Conclusiones de la implementación</h4>
 
@@ -19,9 +20,12 @@ El proyecto consiste en la implementación de un sistema de gestión de ejercici
 - Pruebas: La implementación de los testeos para cada funcionalidad principal asegura la robustez y confiabilidad en el sistema, así como también los casos de borde, como gestión de duplicados y validación de entradas.
 - Integración y extensibilidad: El código tiene una estructura que permite integrarlo fácilmente con otros sistemas y así también extensibilidad para añadir más características, como otros ejercicios.
 
-<h3 align="center">Explicación del Código Fuente</h2>
 
-El código fuente se divide en 4 carpetas principales:
+<center>
+    <h1>Explicación del Código Fuente</h1>
+    <p>El código fuente se divide en 4 carpetas principales:</p>
+</center>
+
 
 <h4>- /extras</h4>
 
