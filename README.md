@@ -1,17 +1,8 @@
 <h1 align="center">CONCLUSIÓN</h1>
 
 <p align="center">
-  <img src="https://3fc4ed44-3fbc-419a-97a1-a29742511391.selcdn.net/coub_storage/coub/simple/cw_timeline_pic/1da1427f569/5e81901d95dfdb8e9941e/med_1610325676_image.jpg" alt="Texto alternativo">
+  <img src="https://i.kym-cdn.com/photos/images/newsfeed/002/805/512/39d.jpg" alt="Texto alternativo">
 </p>
-
-<video width="320" height="240" controls>
-  <source src="TP-2024-TSPORT\Extras\STK-20211120-WA0004.mp4" type="video/mp4">
-</video>
-
-<div id="video-play-button-container-3721493" class="video-play-button-container" data-video-id="3721493">
-<img class="video-play-button hidden" src="/images/icons/icon_play.png" alt="play">
-<div class="video-spinner-container hidden"></div>
-</div><source id="detailed-item-video-src-mp4" src="https://rvideos1.memedroid.com/videos/UPLOADED733/62ba5555b17e4.mp4" type="video/mp4"><source id="detailed-item-video-src-webm" src="https://rvideos1.memedroid.com/videos/UPLOADED733/62ba5555b17e4.webm" type="video/webm">
 
 <h3 align="center">Resumen</h2>
 

@@ -1,5 +1,7 @@
 package almacenamiento
 
+///home/lauty/Documents/AYP2/TP-2024-tsportBACKUP/informacion
+
 import (
 	"TP-2024-TSPORT/paquete/ejercicio"
 	"TP-2024-TSPORT/paquete/rutina"
@@ -29,7 +31,7 @@ func init() {
 //   - Un error en caso de problemas al abrir o escribir en el archivo.
 //   - El método MarshalFile en caso de ejecución correcta.
 func GuardarEjercicios(ejercicios []*ejercicio.Ejercicio, nombreDeArchivo string) error {
-	rutaCompleta := filepath.Join("/home/lauty/Documents/AYP2/TP-2024-tsportBACKUP/informacion", nombreDeArchivo)
+	rutaCompleta := filepath.Join("D:/UNTREF/AlgoritmosyProgramaciónII/TP-2024-tsport/informacion", nombreDeArchivo)
 	archivo, err := os.OpenFile(rutaCompleta, os.O_RDWR | os.O_CREATE | os.O_TRUNC, 0644)
 	if err != nil {
 		return err
@@ -109,7 +111,7 @@ func GuardarRutinas(rutinas []*rutina.Rutina, gestorDeEjercicios *ejercicio.Gest
 //   - Un slice de punteros a Rutina.
 //   - Un error si hay problemas al abrir o leer el archivo.
 func CargarRutinas(nombreDeArchivo string) ([]*rutina.Rutina, error) {
-	archivo, err := os.Open(filepath.Join("/home/lauty/Documents/AYP2/TP-2024-tsportBACKUP/informacion", nombreDeArchivo))
+	archivo, err := os.Open(filepath.Join("D:/UNTREF/AlgoritmosyProgramaciónII/TP-2024-tsport/informacion", nombreDeArchivo))
 	if err != nil {
 		return nil, err
 	}
