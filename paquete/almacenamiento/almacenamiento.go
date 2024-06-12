@@ -1,7 +1,5 @@
 package almacenamiento
 
-///home/lauty/Documents/AYP2/TP-2024-tsportBACKUP/informacion
-
 import (
 	"TP-2024-TSPORT/paquete/ejercicio"
 	"TP-2024-TSPORT/paquete/rutina"
