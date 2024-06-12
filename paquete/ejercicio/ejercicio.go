@@ -3,18 +3,19 @@ package ejercicio
 import (
 	"errors"
 	"sort"
+
 	lista "github.com/untref-ayp2/data-structures/list"
 )
 
 // Ejercicio es una estructura con las características que tendrá su campo.
 type Ejercicio struct {
-	NombreDeEjercicio      		string	`csv:"Nombre"`      		// Nombre del ejercicio
-	DescripcionDeEjercicio 		string	`csv:"Descripcion"` 		// Descripción del ejercicio
-	TiempoEnSegundosDeEjercicio	int		`csv:"TiempoEnSegundos"`	// Tiempo estimado en segundos
-	CaloriasDeEjercicio    		int		`csv:"Calorias"`    		// Calorías quemadas
-	TipoDeEjercicio        		string	`csv:"Tipo"`        		// Tipo de ejercicio
-	PuntosPorTipoDeEjercicio   	int		`csv:"Puntos"`      		// Puntos por tipo de ejercicio
-	DificultadDeEjercicio  		string	`csv:"Dificultad"`  		// Nivel de dificultad
+	NombreDeEjercicio           string `csv:"Nombre"`           // Nombre del ejercicio
+	DescripcionDeEjercicio      string `csv:"Descripcion"`      // Descripción del ejercicio
+	TiempoEnSegundosDeEjercicio int    `csv:"TiempoEnSegundos"` // Tiempo estimado en segundos
+	CaloriasDeEjercicio         int    `csv:"Calorias"`         // Calorías quemadas
+	TipoDeEjercicio             string `csv:"Tipo"`             // Tipo de ejercicio
+	PuntosPorTipoDeEjercicio    int    `csv:"Puntos"`           // Puntos por tipo de ejercicio
+	DificultadDeEjercicio       string `csv:"Dificultad"`       // Nivel de dificultad
 }
 
 // GestorDeEjercicios es una estructura para gestionar los ejercicios.
@@ -27,7 +28,7 @@ type GestorDeEjercicios struct {
 // Retorna:
 //   - Un puntero a GestorDeEjercicios.
 func NuevoGestorDeEjercicios() *GestorDeEjercicios {
-	return &GestorDeEjercicios {
+	return &GestorDeEjercicios{
 		ejercicios: lista.NewDoubleLinkedList[*Ejercicio](),
 	}
 }
@@ -42,12 +43,12 @@ func NuevoGestorDeEjercicios() *GestorDeEjercicios {
 //   - error si el ejercicio ya existe.
 func (gestorDeEjercicios *GestorDeEjercicios) AgregarEjercicio(ejercicio *Ejercicio) error {
 	for nodo := gestorDeEjercicios.ejercicios.Head(); nodo != nil; nodo = nodo.Next() {
-        if nodo.Data().NombreDeEjercicio == ejercicio.NombreDeEjercicio {
-            return errors.New("el ejercicio ya existe")
-        }
-    }
-    gestorDeEjercicios.ejercicios.Append(ejercicio)
-    return nil
+		if nodo.Data().NombreDeEjercicio == ejercicio.NombreDeEjercicio {
+			return errors.New("el ejercicio ya existe")
+		}
+	}
+	gestorDeEjercicios.ejercicios.Append(ejercicio)
+	return nil
 }
 
 // EliminarEjercicio busca un ejercicio por su nombre y lo elimina de la lista.
@@ -108,18 +109,6 @@ func (gestorDeEjercicios *GestorDeEjercicios) ModificarEjercicio(nombreDeEjercic
 		}
 	}
 	return errors.New("ejercicio no encontrado")
-}
-
-// ListarEjerciciosA devuelve una lista de los nombres de todos los ejercicios almacenados en la gestión.
-//
-// Retorna:
-//   - Un slice de punteros a Ejercicio que contiene todos los ejercicios.
-func (gestorDeEjercicios *GestorDeEjercicios) ListarEjerciciosA() []*Ejercicio {
-	resultado := []*Ejercicio{}
-	for nodo := gestorDeEjercicios.ejercicios.Head(); nodo != nil; nodo = nodo.Next() {
-		resultado = append(resultado, nodo.Data())
-	}
-	return resultado
 }
 
 // ListarEjercicios devuelve una lista de todos los ejercicios almacenados en la gestión.
@@ -200,7 +189,26 @@ func (gestorDeEjercicios *GestorDeEjercicios) FiltrarPorTipoPuntosYDuracionMaxim
 	var ejerciciosFiltrados []*Ejercicio
 	for nodo := gestorDeEjercicios.ejercicios.Head(); nodo != nil; nodo = nodo.Next() {
 		ejercicio := nodo.Data()
-		if ejercicio.TipoDeEjercicio == puntosPorTipo && ejercicio.TiempoEnSegundosDeEjercicio <= duracionMaximaEnMinutos * 60 {
+		if ejercicio.TipoDeEjercicio == puntosPorTipo && ejercicio.TiempoEnSegundosDeEjercicio <= duracionMaximaEnMinutos*60 {
+			ejerciciosFiltrados = append(ejerciciosFiltrados, ejercicio)
+		}
+	}
+	return ejerciciosFiltrados
+}
+
+// FiltrarPorTipoPuntosYDuracionMaxima devuelve una lista de ejercicios que coinciden con el tipo de puntos y la duración máxima especificados.
+//
+// Parámetros:
+//   - puntosPorTipo: string, que indica el tipo de puntos a maximizar (cardio, fuerza, flexibilidad).
+//   - duracionMaximaEnMinutos: int, la duración máxima de la rutina en minutos.
+//
+// Retorna:
+//   - Un slice de punteros a Ejercicio que coinciden con los criterios especificados.
+func (gestorDeEjercicios *GestorDeEjercicios) FiltrarPorCaloriasQuemadas(calorias int) []*Ejercicio {
+	var ejerciciosFiltrados []*Ejercicio
+	for nodo := gestorDeEjercicios.ejercicios.Head(); nodo != nil; nodo = nodo.Next() {
+		ejercicio := nodo.Data()
+		if ejercicio.CaloriasDeEjercicio >= calorias {
 			ejerciciosFiltrados = append(ejerciciosFiltrados, ejercicio)
 		}
 	}

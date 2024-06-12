@@ -74,7 +74,9 @@ func gestionarEjercicios(gestorDeEjercicios *ejercicio.GestorDeEjercicios, escan
 		fmt.Println("3. Consultar Ejercicio por Nombre")
 		fmt.Println("4. Modificar Ejercicio por Nombre")
 		fmt.Println("5. Listar todos los Ejercicios")
-		fmt.Println("6. Volver al Menú Principal")
+		fmt.Println("6. Listar Ejercicios por Tipo y Dificultad")
+		fmt.Println("7. Listar Ejercicios por Calorias")
+		fmt.Println("8. Volver al Menú Principal")
 		fmt.Print("\nSeleccione una opción: ")
 		if !escaner.Scan() {
 			break
@@ -103,14 +105,14 @@ func gestionarEjercicios(gestorDeEjercicios *ejercicio.GestorDeEjercicios, escan
 			fmt.Print("Dificultad del ejercicio: ")
 			escaner.Scan()
 			dificultad := escaner.Text()
-			ejercicio := &ejercicio.Ejercicio {
-				NombreDeEjercicio:      		nombre,
-				DescripcionDeEjercicio: 		descripcion,
-				TiempoEnSegundosDeEjercicio:	tiempo,
-				CaloriasDeEjercicio:    		calorias,
-				TipoDeEjercicio:        		tipo,
-				PuntosPorTipoDeEjercicio:     	puntos,
-				DificultadDeEjercicio:  		dificultad,
+			ejercicio := &ejercicio.Ejercicio{
+				NombreDeEjercicio:           nombre,
+				DescripcionDeEjercicio:      descripcion,
+				TiempoEnSegundosDeEjercicio: tiempo,
+				CaloriasDeEjercicio:         calorias,
+				TipoDeEjercicio:             tipo,
+				PuntosPorTipoDeEjercicio:    puntos,
+				DificultadDeEjercicio:       dificultad,
 			}
 			err := gestorDeEjercicios.AgregarEjercicio(ejercicio)
 			if err != nil {
@@ -176,14 +178,14 @@ func gestionarEjercicios(gestorDeEjercicios *ejercicio.GestorDeEjercicios, escan
 			fmt.Print("Nueva dificultad del ejercicio: ")
 			escaner.Scan()
 			nuevaDificultad := escaner.Text()
-			nuevoEjercicio := &ejercicio.Ejercicio {
-				NombreDeEjercicio:           	nuevoNombre,
-				DescripcionDeEjercicio:      	nuevaDescripcion,
-				TiempoEnSegundosDeEjercicio:	nuevoTiempo,
-				CaloriasDeEjercicio:         	nuevasCalorias,
-				TipoDeEjercicio:             	nuevoTipo,
-				PuntosPorTipoDeEjercicio:		nuevosPuntos,
-				DificultadDeEjercicio:       	nuevaDificultad,
+			nuevoEjercicio := &ejercicio.Ejercicio{
+				NombreDeEjercicio:           nuevoNombre,
+				DescripcionDeEjercicio:      nuevaDescripcion,
+				TiempoEnSegundosDeEjercicio: nuevoTiempo,
+				CaloriasDeEjercicio:         nuevasCalorias,
+				TipoDeEjercicio:             nuevoTipo,
+				PuntosPorTipoDeEjercicio:    nuevosPuntos,
+				DificultadDeEjercicio:       nuevaDificultad,
 			}
 			err := gestorDeEjercicios.ModificarEjercicio(nombre, nuevoEjercicio)
 			if err != nil {
@@ -193,15 +195,50 @@ func gestionarEjercicios(gestorDeEjercicios *ejercicio.GestorDeEjercicios, escan
 			}
 		case "5":
 			fmt.Println("\n--- Listar Ejercicios ---")
-			ejercicios := gestorDeEjercicios.ListarEjerciciosA()
+			ejercicios := gestorDeEjercicios.ListarEjercicios()
 			if len(ejercicios) == 0 {
 				fmt.Println("\nNo hay ejercicios disponibles.")
 			} else {
 				for indice, ejercicio := range ejercicios {
-					fmt.Printf("%d. %s\n", indice + 1, ejercicio.NombreDeEjercicio)
+					fmt.Printf("%d. %s\n", indice+1, ejercicio.NombreDeEjercicio)
 				}
 			}
 		case "6":
+			fmt.Print("\nTipo(s) de ejercicios a listar (separados por comas): ")
+			escaner.Scan()
+			entradaDeTipos := escaner.Text()
+			tipos := strings.Split(entradaDeTipos, ",")
+			for indice, tipo := range tipos {
+				tipos[indice] = strings.TrimSpace(tipo)
+			}
+			fmt.Print("Dificultad: ")
+			escaner.Scan()
+			dificultad := escaner.Text()
+			ejerciciosFiltrados := gestorDeEjercicios.FiltrarPorTiposYDificultad(tipos, dificultad)
+			if len(ejerciciosFiltrados) == 0 {
+				fmt.Println("\nNo hay ejercicios disponibles.")
+				return
+			} else {
+				fmt.Println("\nEjercicios disponibles:")
+				for indice, ejercicio := range ejerciciosFiltrados {
+					fmt.Printf("%d. %s\n", indice+1, ejercicio.NombreDeEjercicio)
+				}
+			}
+		case "7":
+			fmt.Print("\nCantidad de calorias quemadas por ejercicio a listar: ")
+			escaner.Scan()
+			calorias, _ := strconv.Atoi(escaner.Text())
+			ejerciciosFiltrados := gestorDeEjercicios.FiltrarPorCaloriasQuemadas(calorias)
+			if len(ejerciciosFiltrados) == 0 {
+				fmt.Println("\nNo hay ejercicios disponibles.")
+				return
+			} else {
+				fmt.Println("\nEjercicios disponibles:")
+				for indice, ejercicio := range ejerciciosFiltrados {
+					fmt.Printf("%d. %s\n", indice+1, ejercicio.NombreDeEjercicio)
+				}
+			}
+		case "8":
 			return
 		default:
 			fmt.Println("\nOpción no válida. Intente de nuevo.")
@@ -239,7 +276,7 @@ func gestionarRutinas(gestorDeEjercicios *ejercicio.GestorDeEjercicios, gestorDe
 			fmt.Println("\n--- Lista de Ejercicios Disponibles ---")
 			ejercicios := gestorDeEjercicios.ListarEjercicios()
 			for indice, ejercicio := range ejercicios {
-				fmt.Printf("%d. %s\n", indice + 1, ejercicio.NombreDeEjercicio)
+				fmt.Printf("%d. %s\n", indice+1, ejercicio.NombreDeEjercicio)
 			}
 			fmt.Println("\nIngrese los números de los ejercicios a incluir en la rutina, separados por comas:")
 			escaner.Scan()
@@ -251,11 +288,11 @@ func gestionarRutinas(gestorDeEjercicios *ejercicio.GestorDeEjercicios, gestorDe
 					fmt.Println("\nNúmero de ejercicio inválido:", numeroString)
 					continue
 				}
-				ejerciciosSeleccionados = append(ejerciciosSeleccionados, *ejercicios[numero - 1])
+				ejerciciosSeleccionados = append(ejerciciosSeleccionados, *ejercicios[numero-1])
 			}
-			rutina := &rutina.Rutina {
-				NombreDeRutina:     					nombre,
-				CaracteristicasIndividualesDeRutina:	ejerciciosSeleccionados,
+			rutina := &rutina.Rutina{
+				NombreDeRutina:                      nombre,
+				CaracteristicasIndividualesDeRutina: ejerciciosSeleccionados,
 			}
 			rutina.CalcularPropiedades(gestorDeEjercicios)
 			err := gestorDeRutinas.AgregarRutina(rutina)
@@ -291,7 +328,7 @@ func gestionarRutinas(gestorDeEjercicios *ejercicio.GestorDeEjercicios, gestorDe
 			} else {
 				var nombresEjercicios []string
 				for _, ejercicio := range rutina.CaracteristicasIndividualesDeRutina {
-				nombresEjercicios = append(nombresEjercicios, ejercicio.NombreDeEjercicio)
+					nombresEjercicios = append(nombresEjercicios, ejercicio.NombreDeEjercicio)
 				}
 				rutina.ListaDeEjerciciosDeRutina = "\"" + strings.Join(nombresEjercicios, "\", \"") + "\""
 				fmt.Printf("\nNombre de rutina: %+v\n", rutina.NombreDeRutina)
@@ -317,7 +354,7 @@ func gestionarRutinas(gestorDeEjercicios *ejercicio.GestorDeEjercicios, gestorDe
 				fmt.Println("\n--- Lista de Ejercicios Disponibles ---")
 				ejercicios := gestorDeEjercicios.ListarEjercicios()
 				for indice, ejercicio := range ejercicios {
-					fmt.Printf("%d. %s\n", indice + 1, ejercicio.NombreDeEjercicio)
+					fmt.Printf("%d. %s\n", indice+1, ejercicio.NombreDeEjercicio)
 				}
 				fmt.Println("\nIngrese los números de los ejercicios a incluir en la rutina, separados por comas:")
 				escaner.Scan()
@@ -329,12 +366,12 @@ func gestionarRutinas(gestorDeEjercicios *ejercicio.GestorDeEjercicios, gestorDe
 						fmt.Println("\nNúmero de ejercicio inválido:", numeroString)
 						continue
 					}
-					ejerciciosSeleccionados = append(ejerciciosSeleccionados, *ejercicios[numero - 1])
+					ejerciciosSeleccionados = append(ejerciciosSeleccionados, *ejercicios[numero-1])
 				}
 			}
-			nuevaRutina := &rutina.Rutina {
-				NombreDeRutina:     					nuevoNombre,
-				CaracteristicasIndividualesDeRutina:	ejerciciosSeleccionados,
+			nuevaRutina := &rutina.Rutina{
+				NombreDeRutina:                      nuevoNombre,
+				CaracteristicasIndividualesDeRutina: ejerciciosSeleccionados,
 			}
 			nuevaRutina.CalcularPropiedades(gestorDeEjercicios)
 			err := gestorDeRutinas.ModificarRutina(nombre, nuevaRutina)
@@ -343,7 +380,7 @@ func gestionarRutinas(gestorDeEjercicios *ejercicio.GestorDeEjercicios, gestorDe
 			} else {
 				var nombresEjercicios []string
 				for _, ejercicio := range nuevaRutina.CaracteristicasIndividualesDeRutina {
-				nombresEjercicios = append(nombresEjercicios, ejercicio.NombreDeEjercicio)
+					nombresEjercicios = append(nombresEjercicios, ejercicio.NombreDeEjercicio)
 				}
 				nuevaRutina.ListaDeEjerciciosDeRutina = "\"" + strings.Join(nombresEjercicios, "\", \"") + "\""
 				fmt.Println("\nRutina modificada correctamente.")
@@ -357,28 +394,28 @@ func gestionarRutinas(gestorDeEjercicios *ejercicio.GestorDeEjercicios, gestorDe
 			}
 		case "5":
 			fmt.Println("\n--- Listar Rutinas ---")
-    		rutinas := gestorDeRutinas.ListarRutinas()
-    		if len(rutinas) == 0 {
-        		fmt.Println("\nNo hay rutinas disponibles.")
-    		} else {
-        		fmt.Println("\nRutinas disponibles:")
-        		for indice, rutina := range rutinas {
-            		fmt.Printf("%d. %s\n", indice + 1, rutina.NombreDeRutina)
-        		}
-    		}
+			rutinas := gestorDeRutinas.ListarRutinas()
+			if len(rutinas) == 0 {
+				fmt.Println("\nNo hay rutinas disponibles.")
+			} else {
+				fmt.Println("\nRutinas disponibles:")
+				for indice, rutina := range rutinas {
+					fmt.Printf("%d. %s\n", indice+1, rutina.NombreDeRutina)
+				}
+			}
 		case "6":
 			fmt.Print("\nDificultad de las rutinas a listar: ")
 			escaner.Scan()
 			dificultad := escaner.Text()
 			rutinas := gestorDeRutinas.ListarRutinasPorDificultad(dificultad)
 			if len(rutinas) == 0 {
-        		fmt.Println("\nNo hay rutinas disponibles.")
-    		} else {
-        		fmt.Println("\nRutinas disponibles:")
-        		for indice, rutina := range rutinas {
-            		fmt.Printf("%d. %s\n", indice + 1, rutina.NombreDeRutina)
-        		}
-    		}
+				fmt.Println("\nNo hay rutinas disponibles.")
+			} else {
+				fmt.Println("\nRutinas disponibles:")
+				for indice, rutina := range rutinas {
+					fmt.Printf("%d. %s\n", indice+1, rutina.NombreDeRutina)
+				}
+			}
 		case "7":
 			gestionarRutinasAutomagicas(gestorDeEjercicios, gestorDeRutinas, escaner)
 		case "8":
@@ -432,12 +469,12 @@ func gestionarRutinasAutomagicas(gestorDeEjercicios *ejercicio.GestorDeEjercicio
 			}
 			ejerciciosOrdenados := gestorDeEjercicios.OrdenarTiempoMenorAMayor(ejerciciosFiltrados)
 			duracionTotalEnSegundos := duracionEnMinutos * 60
-			rutinaAutomagica := &rutina.Rutina {
-				NombreDeRutina:	nombre,
+			rutinaAutomagica := &rutina.Rutina{
+				NombreDeRutina: nombre,
 			}
 			duracionAcumulada := 0
 			for _, ejercicio := range ejerciciosOrdenados {
-				if duracionAcumulada + ejercicio.TiempoEnSegundosDeEjercicio <= duracionTotalEnSegundos {
+				if duracionAcumulada+ejercicio.TiempoEnSegundosDeEjercicio <= duracionTotalEnSegundos {
 					rutinaAutomagica.CaracteristicasIndividualesDeRutina = append(rutinaAutomagica.CaracteristicasIndividualesDeRutina, *ejercicio)
 					duracionAcumulada += ejercicio.TiempoEnSegundosDeEjercicio
 				} else {
@@ -452,7 +489,7 @@ func gestionarRutinasAutomagicas(gestorDeEjercicios *ejercicio.GestorDeEjercicio
 				fmt.Println("\nRutina automágica generada correctamente.")
 				var nombresEjercicios []string
 				for _, ejercicio := range rutinaAutomagica.CaracteristicasIndividualesDeRutina {
-				nombresEjercicios = append(nombresEjercicios, ejercicio.NombreDeEjercicio)
+					nombresEjercicios = append(nombresEjercicios, ejercicio.NombreDeEjercicio)
 				}
 				rutinaAutomagica.ListaDeEjerciciosDeRutina = "\"" + strings.Join(nombresEjercicios, "\", \"") + "\""
 				fmt.Printf("\nNombre de rutina: %+v\n", rutinaAutomagica.NombreDeRutina)
@@ -478,12 +515,12 @@ func gestionarRutinasAutomagicas(gestorDeEjercicios *ejercicio.GestorDeEjercicio
 				}
 			}
 			ejerciciosOrdenados := gestorDeEjercicios.OrdenarTiempoMenorAMayor(ejerciciosFiltrados)
-			rutinaAutomagica := &rutina.Rutina {
-				NombreDeRutina:	nombre,
+			rutinaAutomagica := &rutina.Rutina{
+				NombreDeRutina: nombre,
 			}
 			caloriasAcumuladas := 0
 			for _, ejercicio := range ejerciciosOrdenados {
-				if caloriasAcumuladas + ejercicio.CaloriasDeEjercicio <= caloriasTotales {
+				if caloriasAcumuladas+ejercicio.CaloriasDeEjercicio <= caloriasTotales {
 					rutinaAutomagica.CaracteristicasIndividualesDeRutina = append(rutinaAutomagica.CaracteristicasIndividualesDeRutina, *ejercicio)
 					caloriasAcumuladas += ejercicio.CaloriasDeEjercicio
 				} else {
@@ -498,7 +535,7 @@ func gestionarRutinasAutomagicas(gestorDeEjercicios *ejercicio.GestorDeEjercicio
 				fmt.Println("\nRutina automágica generada correctamente.")
 				var nombresEjercicios []string
 				for _, ejercicio := range rutinaAutomagica.CaracteristicasIndividualesDeRutina {
-				nombresEjercicios = append(nombresEjercicios, ejercicio.NombreDeEjercicio)
+					nombresEjercicios = append(nombresEjercicios, ejercicio.NombreDeEjercicio)
 				}
 				rutinaAutomagica.ListaDeEjerciciosDeRutina = "\"" + strings.Join(nombresEjercicios, "\", \"") + "\""
 				fmt.Printf("\nNombre de rutina: %+v\n", rutinaAutomagica.NombreDeRutina)
@@ -526,14 +563,14 @@ func gestionarRutinasAutomagicas(gestorDeEjercicios *ejercicio.GestorDeEjercicio
 			}
 			ejerciciosOrdenados := gestorDeEjercicios.OrdenarPorPuntajeDescendente(ejerciciosFiltrados)
 			duracionTotalEnSegundos := duracionMaximaEnMinutos * 60
-			rutinaAutomagica := &rutina.Rutina {
-				NombreDeRutina:	nombre,
+			rutinaAutomagica := &rutina.Rutina{
+				NombreDeRutina: nombre,
 			}
 			puntajeTotal := 0
 			duracionTotal := 0
 			ejerciciosUtilizados := make(map[string]bool)
 			for _, ejercicio := range ejerciciosOrdenados {
-				if duracionTotal + ejercicio.TiempoEnSegundosDeEjercicio <= duracionTotalEnSegundos && !ejerciciosUtilizados[ejercicio.NombreDeEjercicio] {
+				if duracionTotal+ejercicio.TiempoEnSegundosDeEjercicio <= duracionTotalEnSegundos && !ejerciciosUtilizados[ejercicio.NombreDeEjercicio] {
 					rutinaAutomagica.CaracteristicasIndividualesDeRutina = append(rutinaAutomagica.CaracteristicasIndividualesDeRutina, *ejercicio)
 					puntajeTotal += ejercicio.PuntosPorTipoDeEjercicio
 					duracionTotal += ejercicio.TiempoEnSegundosDeEjercicio
@@ -549,7 +586,7 @@ func gestionarRutinasAutomagicas(gestorDeEjercicios *ejercicio.GestorDeEjercicio
 				fmt.Println("\nRutina automágica generada correctamente.")
 				var nombresEjercicios []string
 				for _, ejercicio := range rutinaAutomagica.CaracteristicasIndividualesDeRutina {
-				nombresEjercicios = append(nombresEjercicios, ejercicio.NombreDeEjercicio)
+					nombresEjercicios = append(nombresEjercicios, ejercicio.NombreDeEjercicio)
 				}
 				rutinaAutomagica.ListaDeEjerciciosDeRutina = "\"" + strings.Join(nombresEjercicios, "\", \"") + "\""
 				fmt.Printf("\nNombre de rutina: %+v\n", rutinaAutomagica.NombreDeRutina)
