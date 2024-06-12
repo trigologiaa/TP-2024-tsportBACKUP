@@ -16,12 +16,12 @@ func main() {
 	gestorDeEjercicios := ejercicio.NuevoGestorDeEjercicios()
 	ejercicios, err := almacenamiento.CargarEjerciciosDeUna()
 	if err != nil {
-		fmt.Println("Error al iniciar lista de ejercicios:", err)
+		fmt.Println("\nError al iniciar lista de ejercicios:", err)
 	} else {
 		for _, ejercicio := range ejercicios {
 			gestorDeEjercicios.AgregarEjercicio(ejercicio)
 		}
-		fmt.Println("Lista de ejercicios iniciada correctamente.")
+		fmt.Println("\nLista de ejercicios iniciada correctamente.")
 	}
 	gestorDeRutinas := rutina.NuevoGestorDeRutinas(gestorDeEjercicios)
 	rutinas, err := almacenamiento.CargarRutinasDeUna()
@@ -40,7 +40,7 @@ func main() {
 		fmt.Println("2. Gestionar Rutinas")
 		fmt.Println("3. Gestionar Archivos CSV")
 		fmt.Println("4. Salir")
-		fmt.Print("Seleccione una opción: ")
+		fmt.Print("\nSeleccione una opción: ")
 		if !escaner.Scan() {
 			break
 		}
@@ -53,10 +53,10 @@ func main() {
 		case "3":
 			GestionarCSV(gestorDeEjercicios, gestorDeRutinas, escaner)
 		case "4":
-			fmt.Println("Saliendo...")
+			fmt.Println("\nSaliendo...")
 			return
 		default:
-			fmt.Println("Opción no válida. Intente de nuevo.")
+			fmt.Println("\nOpción no válida. Intente de nuevo.")
 		}
 	}
 }
@@ -75,14 +75,14 @@ func gestionarEjercicios(gestorDeEjercicios *ejercicio.GestorDeEjercicios, escan
 		fmt.Println("4. Modificar Ejercicio por Nombre")
 		fmt.Println("5. Listar todos los Ejercicios")
 		fmt.Println("6. Volver al Menú Principal")
-		fmt.Print("Seleccione una opción: ")
+		fmt.Print("\nSeleccione una opción: ")
 		if !escaner.Scan() {
 			break
 		}
 		opcion := escaner.Text()
 		switch opcion {
 		case "1":
-			fmt.Print("Nombre del ejercicio: ")
+			fmt.Print("\nNombre del ejercicio: ")
 			escaner.Scan()
 			nombre := escaner.Text()
 			fmt.Print("Descripción del ejercicio: ")
@@ -114,76 +114,97 @@ func gestionarEjercicios(gestorDeEjercicios *ejercicio.GestorDeEjercicios, escan
 			}
 			err := gestorDeEjercicios.AgregarEjercicio(ejercicio)
 			if err != nil {
-				fmt.Println("Error al agregar el ejercicio:", err)
+				fmt.Println("\nError al agregar el ejercicio:", err)
 			} else {
-				fmt.Println("Ejercicio agregado correctamente.")
+				fmt.Println("\nEjercicio agregado correctamente.")
+				fmt.Printf("\nNombre: %+v\n", ejercicio.NombreDeEjercicio)
+				fmt.Printf("Descripción: %+v\n", ejercicio.DescripcionDeEjercicio)
+				fmt.Printf("Tiempo en segundos: %+v\n", ejercicio.TiempoEnSegundosDeEjercicio)
+				fmt.Printf("Calorías quemadas: %+v\n", ejercicio.CaloriasDeEjercicio)
+				fmt.Printf("Tipo de ejercicio: %+v\n", ejercicio.TipoDeEjercicio)
+				fmt.Printf("Puntos por tipo de ejercicio: %+v\n", ejercicio.PuntosPorTipoDeEjercicio)
+				fmt.Printf("Dificultad: %+v\n", ejercicio.DificultadDeEjercicio)
 			}
 		case "2":
-			fmt.Print("Nombre del ejercicio a eliminar: ")
+			fmt.Print("\nNombre del ejercicio a eliminar: ")
 			escaner.Scan()
 			nombre := escaner.Text()
 			err := gestorDeEjercicios.EliminarEjercicio(nombre)
 			if err != nil {
-				fmt.Println("Error al eliminar el ejercicio:", err)
+				fmt.Println("\nError al eliminar el ejercicio:", err)
 			} else {
-				fmt.Println("Ejercicio eliminado correctamente.")
+				fmt.Println("\nEjercicio eliminado correctamente.")
 			}
 		case "3":
-			fmt.Print("Nombre del ejercicio a consultar: ")
+			fmt.Print("\nNombre del ejercicio a consultar: ")
 			escaner.Scan()
 			nombre := escaner.Text()
 			ejercicio, err := gestorDeEjercicios.ConsultarEjercicio(nombre)
 			if err != nil {
-				fmt.Println("Error al consultar el ejercicio:", err)
+				fmt.Println("\nError al consultar el ejercicio:", err)
 			} else {
-				fmt.Printf("Ejercicio: %+v\n", ejercicio)
+				fmt.Printf("\nNombre: %+v\n", ejercicio.NombreDeEjercicio)
+				fmt.Printf("Descripción: %+v\n", ejercicio.DescripcionDeEjercicio)
+				fmt.Printf("Tiempo en segundos: %+v\n", ejercicio.TiempoEnSegundosDeEjercicio)
+				fmt.Printf("Calorías quemadas: %+v\n", ejercicio.CaloriasDeEjercicio)
+				fmt.Printf("Tipo de ejercicio: %+v\n", ejercicio.TipoDeEjercicio)
+				fmt.Printf("Puntos por tipo de ejercicio: %+v\n", ejercicio.PuntosPorTipoDeEjercicio)
+				fmt.Printf("Dificultad: %+v\n", ejercicio.DificultadDeEjercicio)
 			}
 		case "4":
 			fmt.Print("Nombre del ejercicio a modificar: ")
 			escaner.Scan()
 			nombre := escaner.Text()
+			fmt.Print("Nuevo nombre del ejercicio: ")
+			escaner.Scan()
+			nuevoNombre := escaner.Text()
 			fmt.Print("Nueva descripción del ejercicio: ")
 			escaner.Scan()
-			descripcion := escaner.Text()
+			nuevaDescripcion := escaner.Text()
 			fmt.Print("Nuevo tiempo en segundos: ")
 			escaner.Scan()
-			tiempo, _ := strconv.Atoi(escaner.Text())
+			nuevoTiempo, _ := strconv.Atoi(escaner.Text())
 			fmt.Print("Nuevas calorías quemadas: ")
 			escaner.Scan()
-			calorias, _ := strconv.Atoi(escaner.Text())
+			nuevasCalorias, _ := strconv.Atoi(escaner.Text())
 			fmt.Print("Nuevo tipo de ejercicio: ")
 			escaner.Scan()
-			tipo := escaner.Text()
+			nuevoTipo := escaner.Text()
 			fmt.Print("Nuevos puntos por tipo de ejercicio: ")
 			escaner.Scan()
-			puntos, _ := strconv.Atoi(escaner.Text())
+			nuevosPuntos, _ := strconv.Atoi(escaner.Text())
 			fmt.Print("Nueva dificultad del ejercicio: ")
 			escaner.Scan()
-			dificultad := escaner.Text()
+			nuevaDificultad := escaner.Text()
 			nuevoEjercicio := &ejercicio.Ejercicio {
-				NombreDeEjercicio:           	nombre,
-				DescripcionDeEjercicio:      	descripcion,
-				TiempoEnSegundosDeEjercicio:	tiempo,
-				CaloriasDeEjercicio:         	calorias,
-				TipoDeEjercicio:             	tipo,
-				PuntosPorTipoDeEjercicio:		puntos,
-				DificultadDeEjercicio:       	dificultad,
+				NombreDeEjercicio:           	nuevoNombre,
+				DescripcionDeEjercicio:      	nuevaDescripcion,
+				TiempoEnSegundosDeEjercicio:	nuevoTiempo,
+				CaloriasDeEjercicio:         	nuevasCalorias,
+				TipoDeEjercicio:             	nuevoTipo,
+				PuntosPorTipoDeEjercicio:		nuevosPuntos,
+				DificultadDeEjercicio:       	nuevaDificultad,
 			}
 			err := gestorDeEjercicios.ModificarEjercicio(nombre, nuevoEjercicio)
 			if err != nil {
-				fmt.Println("Error al modificar el ejercicio:", err)
+				fmt.Println("\nError al modificar el ejercicio:", err)
 			} else {
-				fmt.Println("Ejercicio modificado correctamente.")
+				fmt.Println("\nEjercicio modificado correctamente.")
 			}
 		case "5":
-			ejercicios := gestorDeEjercicios.ListarEjercicios()
-			for _, ejercicio := range ejercicios {
-				fmt.Printf("Ejercicio: %+v\n", ejercicio)
+			fmt.Println("\n--- Listar Ejercicios ---")
+			ejercicios := gestorDeEjercicios.ListarEjerciciosA()
+			if len(ejercicios) == 0 {
+				fmt.Println("\nNo hay ejercicios disponibles.")
+			} else {
+				for indice, ejercicio := range ejercicios {
+					fmt.Printf("%d. %s\n", indice + 1, ejercicio.NombreDeEjercicio)
+				}
 			}
 		case "6":
 			return
 		default:
-			fmt.Println("Opción no válida. Intente de nuevo.")
+			fmt.Println("\nOpción no válida. Intente de nuevo.")
 		}
 	}
 }

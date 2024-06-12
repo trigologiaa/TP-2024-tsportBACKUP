@@ -110,6 +110,18 @@ func (gestorDeEjercicios *GestorDeEjercicios) ModificarEjercicio(nombreDeEjercic
 	return errors.New("ejercicio no encontrado")
 }
 
+// ListarEjerciciosA devuelve una lista de los nombres de todos los ejercicios almacenados en la gestión.
+//
+// Retorna:
+//   - Un slice de punteros a Ejercicio que contiene todos los ejercicios.
+func (gestorDeEjercicios *GestorDeEjercicios) ListarEjerciciosA() []*Ejercicio {
+	resultado := []*Ejercicio{}
+	for nodo := gestorDeEjercicios.ejercicios.Head(); nodo != nil; nodo = nodo.Next() {
+		resultado = append(resultado, nodo.Data())
+	}
+	return resultado
+}
+
 // ListarEjercicios devuelve una lista de todos los ejercicios almacenados en la gestión.
 //
 // Retorna:
