@@ -7,10 +7,9 @@ import (
 	"TP-2024-TSPORT/paquete/rutina"
 	"io"
 	"os"
-	"path/filepath"
+
 	"github.com/gocarina/gocsv"
 )
-
 
 func init() {
 	gocsv.SetCSVWriter(func(out io.Writer) *gocsv.SafeCSVWriter {
@@ -31,8 +30,8 @@ func init() {
 //   - Un error en caso de problemas al abrir o escribir en el archivo.
 //   - El método MarshalFile en caso de ejecución correcta.
 func GuardarEjercicios(ejercicios []*ejercicio.Ejercicio, nombreDeArchivo string) error {
-	rutaCompleta := filepath.Join("D:/UNTREF/AlgoritmosyProgramaciónII/TP-2024-tsport/informacion", nombreDeArchivo)
-	archivo, err := os.OpenFile(rutaCompleta, os.O_RDWR | os.O_CREATE | os.O_TRUNC, 0644)
+	rutaCompleta := rutaAlmacenamiento() + nombreDeArchivo
+	archivo, err := os.OpenFile(rutaCompleta, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
 	if err != nil {
 		return err
 	}
@@ -49,16 +48,16 @@ func GuardarEjercicios(ejercicios []*ejercicio.Ejercicio, nombreDeArchivo string
 //   - Un slice de punteros a Ejercicio.
 //   - Un error si hay problemas al abrir o leer el archivo.
 func CargarEjercicios(nombreDeArchivo string) ([]*ejercicio.Ejercicio, error) {
-    archivo, err := os.Open(filepath.Join("D:/UNTREF/AlgoritmosyProgramaciónII/TP-2024-tsport/informacion", nombreDeArchivo))
-    if err != nil {
-        return nil, err
-    }
-    defer archivo.Close()
-    ejercicios := []*ejercicio.Ejercicio{}
-    if err := gocsv.UnmarshalFile(archivo, &ejercicios); err != nil {
-        return nil, err
-    }
-    return ejercicios, nil
+	archivo, err := os.Open(rutaAlmacenamiento() + nombreDeArchivo)
+	if err != nil {
+		return nil, err
+	}
+	defer archivo.Close()
+	ejercicios := []*ejercicio.Ejercicio{}
+	if err := gocsv.UnmarshalFile(archivo, &ejercicios); err != nil {
+		return nil, err
+	}
+	return ejercicios, nil
 }
 
 // CargarEjerciciosDeUna carga una lista de ejercicios desde un archivo CSV.
@@ -67,8 +66,7 @@ func CargarEjercicios(nombreDeArchivo string) ([]*ejercicio.Ejercicio, error) {
 //   - Un slice de punteros a Ejercicio.
 //   - Un error si hay problemas al abrir o leer el archivo.
 func CargarEjerciciosDeUna() ([]*ejercicio.Ejercicio, error) {
-	nombreDeArchivo := "ejercicios.csv"
-	archivo, err := os.Open(filepath.Join("D:/UNTREF/AlgoritmosyProgramaciónII/TP-2024-tsport/informacion", nombreDeArchivo))
+	archivo, err := os.Open(rutaAlmacenamiento() + "ejercicios.csv")
 	if err != nil {
 		return nil, err
 	}
@@ -90,16 +88,16 @@ func CargarEjerciciosDeUna() ([]*ejercicio.Ejercicio, error) {
 // Retorna:
 //   - Un error en caso de problemas al abrir o escribir en el archivo.
 func GuardarRutinas(rutinas []*rutina.Rutina, gestorDeEjercicios *ejercicio.GestorDeEjercicios, nombreDeArchivo string) error {
-    rutaCompleta := filepath.Join("D:/UNTREF/AlgoritmosyProgramaciónII/TP-2024-tsport/informacion", nombreDeArchivo)
-    archivo, err := os.OpenFile(rutaCompleta, os.O_RDWR | os.O_CREATE | os.O_TRUNC, 0644)
-    if err != nil {
-        return err
-    }
-    defer archivo.Close()
-    for _, rutina := range rutinas {
-        rutina.CalcularPropiedades(gestorDeEjercicios)
-    }
-    return gocsv.MarshalFile(&rutinas, archivo)
+	rutaCompleta := rutaAlmacenamiento() + nombreDeArchivo
+	archivo, err := os.OpenFile(rutaCompleta, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
+	if err != nil {
+		return err
+	}
+	defer archivo.Close()
+	for _, rutina := range rutinas {
+		rutina.CalcularPropiedades(gestorDeEjercicios)
+	}
+	return gocsv.MarshalFile(&rutinas, archivo)
 }
 
 // CargarRutinas carga una lista de rutinas desde un archivo CSV.
@@ -111,7 +109,7 @@ func GuardarRutinas(rutinas []*rutina.Rutina, gestorDeEjercicios *ejercicio.Gest
 //   - Un slice de punteros a Rutina.
 //   - Un error si hay problemas al abrir o leer el archivo.
 func CargarRutinas(nombreDeArchivo string) ([]*rutina.Rutina, error) {
-	archivo, err := os.Open(filepath.Join("D:/UNTREF/AlgoritmosyProgramaciónII/TP-2024-tsport/informacion", nombreDeArchivo))
+	archivo, err := os.Open(rutaAlmacenamiento() + nombreDeArchivo)
 	if err != nil {
 		return nil, err
 	}
@@ -129,15 +127,24 @@ func CargarRutinas(nombreDeArchivo string) ([]*rutina.Rutina, error) {
 //   - Un slice de punteros a Rutina.
 //   - Un error si hay problemas al abrir o leer el archivo.
 func CargarRutinasDeUna() ([]*rutina.Rutina, error) {
-    nombreDeArchivo := "rutinas.csv"
-    archivo, err := os.Open(filepath.Join("D:/UNTREF/AlgoritmosyProgramaciónII/TP-2024-tsport/informacion", nombreDeArchivo))
-    if err != nil {
-        return nil, err
-    }
-    defer archivo.Close()
-    rutinas := []*rutina.Rutina{}
-    if err := gocsv.UnmarshalFile(archivo, &rutinas); err != nil {
-        return nil, err
-    }
-    return rutinas, nil
+	archivo, err := os.Open(rutaAlmacenamiento() + "rutinas.csv")
+	if err != nil {
+		return nil, err
+	}
+	defer archivo.Close()
+	rutinas := []*rutina.Rutina{}
+	if err := gocsv.UnmarshalFile(archivo, &rutinas); err != nil {
+		return nil, err
+	}
+	return rutinas, nil
+}
+
+// rutaAlmacenamiento devuelve la ruta donde se encuentran los archivos CSV.
+//
+// Retorna:
+//   - Un string que contiene la ruta de la carpeta informacion.
+func rutaAlmacenamiento() string {
+	dir, _ := os.Getwd()
+	ruta := dir[:len(dir)-4] + "informacion/"
+	return ruta
 }
