@@ -3,6 +3,7 @@ package ejercicio
 import (
 	"errors"
 	"sort"
+
 	lista "github.com/untref-ayp2/data-structures/list"
 )
 
@@ -27,7 +28,7 @@ type GestorDeEjercicios struct {
 // Retorna:
 //   - Un puntero a GestorDeEjercicios.
 func NuevoGestorDeEjercicios() *GestorDeEjercicios {
-	return &GestorDeEjercicios {
+	return &GestorDeEjercicios{
 		ejercicios: lista.NewDoubleLinkedList[*Ejercicio](),
 	}
 }
@@ -215,24 +216,23 @@ func (gestorDeEjercicios *GestorDeEjercicios) FiltrarPorTipoPuntosYDuracionMaxim
 	var ejerciciosFiltrados []*Ejercicio
 	for nodo := gestorDeEjercicios.ejercicios.Head(); nodo != nil; nodo = nodo.Next() {
 		ejercicio := nodo.Data()
-		if ejercicio.TipoDeEjercicio == puntosPorTipo && ejercicio.TiempoEnSegundosDeEjercicio <= duracionMaximaEnMinutos * 60 {
+		if ejercicio.TipoDeEjercicio == puntosPorTipo && ejercicio.TiempoEnSegundosDeEjercicio <= duracionMaximaEnMinutos*60 {
 			ejerciciosFiltrados = append(ejerciciosFiltrados, ejercicio)
 		}
-		if ejercicio.TipoDeEjercicio != puntosPorTipo && ejercicio.TiempoEnSegundosDeEjercicio <= duracionMaximaEnMinutos * 60 {
+		if ejercicio.TipoDeEjercicio != puntosPorTipo && ejercicio.TiempoEnSegundosDeEjercicio <= duracionMaximaEnMinutos*60 {
 			ejerciciosFiltrados = append(ejerciciosFiltrados, ejercicio)
 		}
 	}
 	return ejerciciosFiltrados
 }
 
-// FiltrarPorTipoPuntosYDuracionMaxima devuelve una lista de ejercicios que coinciden con el tipo de puntos y la duración máxima especificados.
+// FiltrarPorCaloriasQuemadas devuelve una lista de ejercicios que coinciden con las calorias quemadas especificadas.
 //
 // Parámetros:
-//   - puntosPorTipo: string, que indica el tipo de puntos a maximizar (cardio, fuerza, flexibilidad).
-//   - duracionMaximaEnMinutos: int, la duración máxima de la rutina en minutos.
+//   - calorias: int, la cantidad de calorias quemadas minima de los ejercicios a listar.
 //
 // Retorna:
-//   - Un slice de punteros a Ejercicio que coinciden con los criterios especificados.
+//   - Un slice de punteros a Ejercicio que coinciden con el criterio especificado.
 func (gestorDeEjercicios *GestorDeEjercicios) FiltrarPorCaloriasQuemadas(calorias int) []*Ejercicio {
 	var ejerciciosFiltrados []*Ejercicio
 	for nodo := gestorDeEjercicios.ejercicios.Head(); nodo != nil; nodo = nodo.Next() {
