@@ -3,7 +3,6 @@ package ejercicio
 import (
 	"errors"
 	"sort"
-
 	lista "github.com/untref-ayp2/data-structures/list"
 )
 
@@ -28,7 +27,7 @@ type GestorDeEjercicios struct {
 // Retorna:
 //   - Un puntero a GestorDeEjercicios.
 func NuevoGestorDeEjercicios() *GestorDeEjercicios {
-	return &GestorDeEjercicios{
+	return &GestorDeEjercicios {
 		ejercicios: lista.NewDoubleLinkedList[*Ejercicio](),
 	}
 }
@@ -163,6 +162,33 @@ func (gestorDeEjercicios *GestorDeEjercicios) FiltrarPorTiposYDificultad(tipos [
 	return ejerciciosFiltrados
 }
 
+// FiltrarPorTipos filtra los ejercicios por los tipos especificados.
+func (gestorDeEjercicios *GestorDeEjercicios) FiltrarPorTipos(tipos []string) []*Ejercicio {
+	var ejerciciosFiltrados []*Ejercicio
+	for nodo := gestorDeEjercicios.ejercicios.Head(); nodo != nil; nodo = nodo.Next() {
+		ejercicio := nodo.Data()
+		for _, tipo := range tipos {
+			if ejercicio.TipoDeEjercicio == tipo {
+				ejerciciosFiltrados = append(ejerciciosFiltrados, ejercicio)
+				break
+			}
+		}
+	}
+	return ejerciciosFiltrados
+}
+
+// FiltrarPorDificultad filtra los ejercicios por la dificultad especificada.
+func (gestorDeEjercicios *GestorDeEjercicios) FiltrarPorDificultad(dificultad string) []*Ejercicio {
+	var ejerciciosFiltrados []*Ejercicio
+	for nodo := gestorDeEjercicios.ejercicios.Head(); nodo != nil; nodo = nodo.Next() {
+		ejercicio := nodo.Data()
+		if ejercicio.DificultadDeEjercicio == dificultad {
+			ejerciciosFiltrados = append(ejerciciosFiltrados, ejercicio)
+		}
+	}
+	return ejerciciosFiltrados
+}
+
 // OrdenarTiempoMenorAMayor ordena los ejercicios filtrados por tiempo en segundos de menor a mayor.
 //
 // Parámetros:
@@ -189,7 +215,10 @@ func (gestorDeEjercicios *GestorDeEjercicios) FiltrarPorTipoPuntosYDuracionMaxim
 	var ejerciciosFiltrados []*Ejercicio
 	for nodo := gestorDeEjercicios.ejercicios.Head(); nodo != nil; nodo = nodo.Next() {
 		ejercicio := nodo.Data()
-		if ejercicio.TipoDeEjercicio == puntosPorTipo && ejercicio.TiempoEnSegundosDeEjercicio <= duracionMaximaEnMinutos*60 {
+		if ejercicio.TipoDeEjercicio == puntosPorTipo && ejercicio.TiempoEnSegundosDeEjercicio <= duracionMaximaEnMinutos * 60 {
+			ejerciciosFiltrados = append(ejerciciosFiltrados, ejercicio)
+		}
+		if ejercicio.TipoDeEjercicio != puntosPorTipo && ejercicio.TiempoEnSegundosDeEjercicio <= duracionMaximaEnMinutos * 60 {
 			ejerciciosFiltrados = append(ejerciciosFiltrados, ejercicio)
 		}
 	}

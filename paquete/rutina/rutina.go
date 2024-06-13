@@ -113,9 +113,7 @@ func (gestorDeRutinas *GestorDeRutinas) ConsultarRutina(nombreDeRutina string) (
 func (gestorDeRutinas *GestorDeRutinas) ModificarRutina(nombreDeRutina string, nuevaRutina *Rutina) error {
 	for nodo := gestorDeRutinas.rutinas.Head(); nodo != nil; nodo = nodo.Next() {
 		if nodo.Data().NombreDeRutina == nombreDeRutina {
-			// Recalcular propiedades para la nueva rutina
 			nuevaRutina.CalcularPropiedades(gestorDeRutinas.gestorDeEjercicios)
-			// Establecer los nuevos datos en el nodo correspondiente
 			nodo.SetData(nuevaRutina)
 			return nil
 		}
